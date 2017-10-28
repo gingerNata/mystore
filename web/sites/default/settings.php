@@ -740,6 +740,7 @@ $settings['file_scan_ignore_directories'] = [
 ];
 $settings['trusted_host_patterns'] = array(
     '^localhost$',
+  '^mystore\.loc$',
   );
 /**
  * Load local development override configuration, if available.
@@ -751,10 +752,10 @@ $settings['trusted_host_patterns'] = array(
  *
  * Keep this code block at the end of this file to take full effect.
  */
-#
-# if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
-#   include $app_root . '/' . $site_path . '/settings.local.php';
-# }
+
+ if (file_exists(__DIR__ . '/settings.local.php')) {
+   include __DIR__ . '/settings.local.php';
+ }
 $databases['default']['default'] = array (
   'database' => 'mystore',
   'username' => 'root',
@@ -766,4 +767,4 @@ $databases['default']['default'] = array (
   'driver' => 'mysql',
 );
 $settings['install_profile'] = 'commerce_base';
-$config_directories['sync'] = 'sites/default/files/config_1aAtKXklLmCgaltimOmkSEcZu9zUQu6zgvUxyp9xlABtjoKa1xw-2YcuBylm84TXuwwz01guQw/sync';
+$config_directories['sync'] = 'sites/config';
