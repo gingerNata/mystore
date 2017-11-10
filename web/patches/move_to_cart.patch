@@ -1,0 +1,46 @@
+Index: web/modules/contrib/commerce_wishlist/src/Plugin/views/field/MoveToCart.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- web/modules/contrib/commerce_wishlist/src/Plugin/views/field/MoveToCart.php	(revision )
++++ web/modules/contrib/commerce_wishlist/src/Plugin/views/field/MoveToCart.php	(revision )
+@@ -50,7 +50,7 @@
+    *
+    * @var \Drupal\commerce_store\StoreContextInterface
+    */
+-  protected $storeContext;
++//  protected $storeContext;
+ 
+   /**
+    * The wishlist manager.
+@@ -76,17 +76,16 @@
+    *   The cart provider.
+    * @param \Drupal\commerce_order\Resolver\OrderTypeResolverInterface $order_type_resolver
+    *   The order type resolver.
+-   * @param \Drupal\commerce_store\StoreContextInterface $store_context
+    *   The store context.
+    */
+-  public function __construct(array $configuration, $plugin_id, $plugin_definition, WishlistManagerInterface $wishlist_manager, CartManagerInterface $cart_manager, CartProviderInterface $cart_provider, OrderTypeResolverInterface $order_type_resolver, StoreContextInterface $store_context) {
++  public function __construct(array $configuration, $plugin_id, $plugin_definition, WishlistManagerInterface $wishlist_manager, CartManagerInterface $cart_manager, CartProviderInterface $cart_provider, OrderTypeResolverInterface $order_type_resolver) {
+     parent::__construct($configuration, $plugin_id, $plugin_definition);
+ 
+     $this->wishlistManager = $wishlist_manager;
+     $this->cartManager = $cart_manager;
+     $this->cartProvider = $cart_provider;
+     $this->orderTypeResolver = $order_type_resolver;
+-    $this->storeContext = $store_context;
++//    $this->storeContext = $store_context;
+   }
+ 
+   /**
+@@ -100,8 +99,7 @@
+       $container->get('commerce_wishlist.wishlist_manager'),
+       $container->get('commerce_cart.cart_manager'),
+       $container->get('commerce_cart.cart_provider'),
+-      $container->get('commerce_order.chain_order_type_resolver'),
+-      $container->get('commerce_store.store_context')
++      $container->get('commerce_order.chain_order_type_resolver')
+     );
+   }
+ 

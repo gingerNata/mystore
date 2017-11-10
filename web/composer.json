@@ -1,0 +1,81 @@
+{
+    "name": "nata/web",
+    "type": "project",
+    "require": {
+        "cweagans/composer-patches": "^1.6.0",
+        "drupal/admin_toolbar": "^1.20",
+        "drupal/commerce": "^2.0",
+        "drupal/commerce_wishlist": "^3.0@alpha",
+        "drupal/composer_manager": "^1.0",
+        "drupal/console": "^1.0",
+        "drupal/console-launcher": "^1.0",
+        "drupal/core": "8.4.1",
+        "drupal/devel": "^1.2",
+        "drupal/drupal8_zymphonies_theme": "^1.0",
+        "drupal/hierarchical_taxonomy_menu": "^1.15",
+        "drupal/search_api": "^1.5",
+        "drupal/search_api_solr": "^1.2",
+        "drupal/search_api_solr_multilingual": "^1.1",
+        "drupal/simplenews": "^1.0@alpha",
+        "drupal/swiftmailer": "1.x-dev",
+        "drupal/token": "^1.0",
+        "drush/drush": "~8.0|^9.0.0-beta8",
+        "hussainweb/drupal-composer-helper": "^1.0",
+        "webflo/drupal-finder": "^1.1"
+    },
+    "require-dev": {
+        "behat/mink": "~1.7",
+        "behat/mink-goutte-driver": "~1.2",
+        "jcalderonzumba/gastonjs": "~1.0.2",
+        "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
+        "mikey179/vfsstream": "~1.2",
+        "phpunit/phpunit": ">=4.8.28 <5",
+        "symfony/css-selector": "~2.8"
+    },
+    "authors": [
+        {
+            "name": "Nati",
+            "email": "youremail@domain.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
+    "minimum-stability": "dev",
+    "extra": {
+        "drupal-composer-helper": {
+            "web-prefix": "./"
+        },
+        "enable-patching": true,
+        "installer-paths": {
+            ".//core": [
+                "type:drupal-core"
+            ]
+        },
+        "patches": {
+            "drupal/commerce_wishlist": {
+                "Drupal commerce wishlist fix": "patches/move_to_cart.patch"
+            }
+        }
+    },
+    "prefer-stable": true,
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\composer_manager\\Composer\\": "modules/contrib/composer_manager/src/Composer"
+        }
+    },
+    "scripts": {
+        "drupal-rebuild": "Drupal\\composer_manager\\Composer\\Command::rebuild",
+        "drupal-update": "Drupal\\composer_manager\\Composer\\Command::update"
+    }
+}

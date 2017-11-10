@@ -20,24 +20,14 @@
         }
     },
     "config": {
-      "bin-dir": "bin"
+        "bin-dir": "bin"
     },
     "require": {
         "ext-curl": "*",
         "composer/installers": "^1.0.20",
         "drupal-composer/drupal-scaffold": "^2.0.1",
         "cweagans/composer-patches": "~1.0",
-        "drupal/core": "~8.3.0",
-        "drupal/console": "~1.0",
-        "drupal/commerce": "2.x-dev",
-        "drupal/swiftmailer": "1.x-dev",
-        "drupalcommerce/commerce_base": "dev-8.x-1.x",
-        "drupal/admin_toolbar": "^1.18",
-        "drupal/devel": "^1.0@beta",
-        "drupal/drupal8_zymphonies_theme": "^1.0",
-        "drupal/sales_zymphonies_theme": "^1.0",
-        "drupal/hierarchical_taxonomy_menu": "^1.15",
-        "drupal/commerce_wishlist": "^3.0@alpha"
+        "drupalcommerce/commerce_base": "dev-8.x-1.x"
     },
     "require-dev": {
         "behat/mink": "~1.7",
@@ -56,7 +46,10 @@
     "autoload": {
         "classmap": [
             "scripts/composer/ScriptHandler.php"
-        ]
+        ],
+        "psr-4": {
+            "Drupal\\composer_manager\\Composer\\": "web/modules/contrib/composer_manager/src/Composer"
+        }
     },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
@@ -71,7 +64,9 @@
         ],
         "post-update-cmd": [
             "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
-        ]
+        ],
+        "drupal-rebuild": "Drupal\\composer_manager\\Composer\\Command::rebuild",
+        "drupal-update": "Drupal\\composer_manager\\Composer\\Command::update"
     },
     "extra": {
         "installer-paths": {
