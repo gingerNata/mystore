@@ -3,3 +3,6 @@ type: module
 description: Dadi custom module
 core: 8.x
 package: Custom
+dependencies:
+  - block
+  - commerce_product

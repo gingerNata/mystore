@@ -6,6 +6,13 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity;
+use Drupal\commerce_product\Entity\ProductVariationType;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\views\ViewExecutable;
+
 
 /**
  * Implements hook_help().
@@ -20,5 +27,112 @@ function dadi_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     default:
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function dadi_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  $forms_for_validation = [
+    "commerce_product_default_edit_form",
+    "commerce_product_default_add_form",
+    "commerce_product_inse_add_form",
+    "commerce_product_inse_edit_form",
+    "commerce_product_vzutta_add_form",
+    "commerce_product_vzutta_edit_form",
+  ];
+  if (in_array($form_id, $forms_for_validation)) {
+    $form['#validate'][] = 'dadi_on_product_save_validation';
+  }
+
+}
+
+function dadi_on_product_save_validation(&$form, FormStateInterface $form_state) {
+  $items_to_display = FALSE;
+
+  if ($form_state->hasValue('variations')) {
+    $variations = $form_state->getValue('variations');
+    foreach ($variations['entities'] as $key => $value) {
+      $comlete_form = $form_state->getCompleteForm();
+      $entity = $comlete_form['variations']['widget']['entities'][$key];
+      if ($entity) {
+        $display_on_catalog = $entity['#entity']->get('field_on_catalog')
+          ->getValue();
+        if ($display_on_catalog[0]['value']) {
+          $items_to_display = TRUE;
+          break;
+        }
+      }
+    }
+    if (!$items_to_display) {
+      $form_state->setErrorByName('variations', t('As min one variation must be displayed on catalog'));
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function dadi_entity_extra_field_info() {
+  $extra = array();
+  foreach (ProductVariationType::loadMultiple() as $bundle) {
+    $extra['commerce_product_variation'][$bundle->Id()]['display']['wish_button'] = array(
+      'label' => t('Wishlist button'),
+      'description' => t('Add to wishlist button'),
+      'weight' => 100,
+      'visible' => TRUE,
+    );
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function dadi_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($display->getComponent('wish_button')) {
+    $id = $entity->get('variation_id')->getString();
+    $link_text = t("Add to wishlist");
+    $build['wish_button'] = [
+      '#type' => 'markup',
+      '#attached' => array(
+        'library' => array(
+          'dadi/wish-button',
+        ),
+      ),
+      '#markup' => '<a class="use-ajax wishlist-button" id="variation-' . $id . '"
+      href="/ajax/addtowishlist/' . $id . '"> ' . $link_text . '</a>',
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function dadi_preprocess_page(&$variables) {
+  $logged_in = \Drupal::currentUser()->isAuthenticated();
+  if (!$logged_in) {
+    # Add libraries for anonymous
+    $libraries['#attached']['library'][] = 'core/drupal.ajax';
+    render($libraries);
+  }
+}
+
+
+/**
+ * This change filter and exclude current product from block "Similar products"
+ *
+ * Implements hook_views_pre_build().
+ */
+function dadi_views_pre_build(ViewExecutable $view) {
+  if ($view->storage->get('id') == 'products' && $view->current_display == 'block_1'){
+    $path = \Drupal::request()->getpathInfo();
+    $arg  = explode('/',$path);
+    if ($arg[2] == 'product' && isset($arg[3])){
+      $view->filter['product_id_1']->value['value'] = $arg[3];
+    }
   }
 }

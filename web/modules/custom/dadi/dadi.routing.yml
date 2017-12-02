@@ -1,0 +1,8 @@
+
+dadi.wishlist_ajax_link_controller_addToWishlist:
+  path: '/ajax/addtowishlist/{id}'
+  defaults:
+    _controller: '\Drupal\dadi\Controller\WishlistAjaxLinkController::addToWishlist'
+    _title: 'addToWishlist'
+  requirements:
+    _permission: 'access wishlist'

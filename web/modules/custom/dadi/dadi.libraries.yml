@@ -1,0 +1,6 @@
+wish-button:
+  version: 1.x
+  js:
+    js/wish_button.js: {}
+  dependencies:
+    - core/jquery
