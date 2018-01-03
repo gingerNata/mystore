@@ -12,6 +12,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\views\ViewExecutable;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 
 
 /**
@@ -46,9 +49,69 @@ function dadi_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (in_array($form_id, $forms_for_validation)) {
     $form['#validate'][] = 'dadi_on_product_save_validation';
   }
+  
+  switch ($form_id){
+    case 'comment_comments_to_products_form':
+      $user = \Drupal::currentUser();
+      if ($user->id() && $email = $user->getEmail()) {
+        $form['field_e_mail']['widget'][0]['value']['#default_value'] = $email;
+      }
+      $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
+      $form['actions']['submit']['#attributes'] = ['class' => ['use-ajax',],];
+      $form['actions']['submit']['#ajax'] = [
+        'callback' => 'comment_ajax_callback',
+        'wrapper' => 'comment-form',
 
+    ];
+      break;
+  }
 }
 
+/**
+ * @param array $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @return \Drupal\Core\Ajax\AjaxResponse
+ */
+function comment_ajax_callback(array &$form, FormStateInterface $form_state){
+  $response = new AjaxResponse();
+  if(!$form_state->hasAnyErrors()) {
+    $options = array(
+      'dialogClass' => 'popup-dialog-class',
+      'width'       => '300',
+      'height'      => '300',
+    );
+    $title = t('Subscribe to news');
+    $email = $form_state->getValue('field_e_mail')[0]['value'];
+    $content = _get_popup_content($email);
+    $response->addCommand(new OpenModalDialogCommand($title, $content, $options));
+  }
+  else{
+    $response->addCommand(new Ajax\ReplaceCommand('#comment-form', $form));
+    $messages = drupal_get_messages(); // catch all messages
+  }
+
+  return $response;
+}
+
+/**
+ * @param $email
+ * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
+ */
+function _get_popup_content($email) {
+  $succes_link = '<a href="/dadi/submit/subscribe/' . $email . '">' . t('Subscribe') . '</a>';
+  $content = t('Would you like to subscribe to new items?');
+  $content .= "<div class='popup-email'>" . $email . "</div>";
+  $content .= '<div class="after-message">' . t('Any spam. Only useful information') . '</div>';
+  $content .= '<a href="/dadi/reset/subscribe">' . t('Don\'t subscribe') . '</a>';
+  $content .= "<button class='btn btn-success'>$succes_link</button>";
+  return $content;
+}
+
+
+/**
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ */
 function dadi_on_product_save_validation(&$form, FormStateInterface $form_state) {
   $items_to_display = FALSE;
 
@@ -128,11 +191,11 @@ function dadi_preprocess_page(&$variables) {
  * Implements hook_views_pre_build().
  */
 function dadi_views_pre_build(ViewExecutable $view) {
-  if ($view->storage->get('id') == 'products' && $view->current_display == 'block_1'){
-    $path = \Drupal::request()->getpathInfo();
-    $arg  = explode('/',$path);
-    if ($arg[2] == 'product' && isset($arg[3])){
-      $view->filter['product_id_1']->value['value'] = $arg[3];
-    }
-  }
+//  if ($view->storage->get('id') == 'products' && $view->current_display == 'block_1'){
+//    $path = \Drupal::request()->getpathInfo();
+//    $arg  = explode('/',$path);
+//    if ($arg[2] == 'product' && isset($arg[3])){
+//      $view->filter['product_id_1']->value['value'] = $arg[3];
+//    }
+//  }
 }

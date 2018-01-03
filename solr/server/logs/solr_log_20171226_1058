@@ -1,0 +1,155 @@
+2017-12-05 07:03:55.954 INFO  (main) [   ] o.e.j.u.log Logging initialized @3823ms
+2017-12-05 07:03:57.741 INFO  (main) [   ] o.e.j.s.Server jetty-9.2.13.v20150730
+2017-12-05 07:03:57.805 WARN  (main) [   ] o.e.j.s.h.RequestLogHandler !RequestLog
+2017-12-05 07:03:57.808 INFO  (main) [   ] o.e.j.d.p.ScanningAppProvider Deployment monitor [file:/var/www/mystore/solr/server/contexts/] at interval 0
+2017-12-05 07:04:00.561 INFO  (main) [   ] o.e.j.w.StandardDescriptorProcessor NO JSP Support for /solr, did not find org.apache.jasper.servlet.JspServlet
+2017-12-05 07:04:00.666 WARN  (main) [   ] o.e.j.s.SecurityHandler ServletContext@o.e.j.w.WebAppContext@e25b2fe{/solr,file:/var/www/mystore/solr/server/solr-webapp/webapp/,STARTING}{/var/www/mystore/solr/server/solr-webapp/webapp} has uncovered http methods for path: /
+2017-12-05 07:04:00.763 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter SolrDispatchFilter.init(): WebAppClassLoader=117244645@6fd02e5
+2017-12-05 07:04:01.061 INFO  (main) [   ] o.a.s.c.SolrResourceLoader JNDI not configured for solr (NoInitialContextEx)
+2017-12-05 07:04:01.062 INFO  (main) [   ] o.a.s.c.SolrResourceLoader using system property solr.solr.home: /var/www/mystore/solr/server/solr
+2017-12-05 07:04:01.078 INFO  (main) [   ] o.a.s.c.SolrResourceLoader new SolrResourceLoader for directory: '/var/www/mystore/solr/server/solr'
+2017-12-05 07:04:01.078 INFO  (main) [   ] o.a.s.c.SolrResourceLoader JNDI not configured for solr (NoInitialContextEx)
+2017-12-05 07:04:01.078 INFO  (main) [   ] o.a.s.c.SolrResourceLoader using system property solr.solr.home: /var/www/mystore/solr/server/solr
+2017-12-05 07:04:01.148 INFO  (main) [   ] o.a.s.c.SolrXmlConfig Loading container configuration from /var/www/mystore/solr/server/solr/solr.xml
+2017-12-05 07:04:02.022 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Config-defined core root directory: /var/www/mystore/solr/server/solr
+2017-12-05 07:04:02.494 INFO  (main) [   ] o.a.s.c.CoreContainer New CoreContainer 1634132079
+2017-12-05 07:04:02.494 INFO  (main) [   ] o.a.s.c.CoreContainer Loading cores into CoreContainer [instanceDir=/var/www/mystore/solr/server/solr]
+2017-12-05 07:04:02.495 WARN  (main) [   ] o.a.s.c.CoreContainer Couldn't add files from /var/www/mystore/solr/server/solr/lib to classpath: /var/www/mystore/solr/server/solr/lib
+2017-12-05 07:04:02.695 INFO  (main) [   ] o.a.s.h.c.HttpShardHandlerFactory created with socketTimeout : 600000,connTimeout : 60000,maxConnectionsPerHost : 20,maxConnections : 10000,corePoolSize : 0,maximumPoolSize : 2147483647,maxThreadIdleTime : 5,sizeOfQueue : -1,fairnessPolicy : false,useRetries : false,connectionsEvictorSleepDelay : 5000,maxConnectionIdleTime : 40000,
+2017-12-05 07:04:04.866 INFO  (main) [   ] o.a.s.u.UpdateShardHandler Creating UpdateShardHandler HTTP client with params: socketTimeout=600000&connTimeout=60000&retry=true
+2017-12-05 07:04:04.891 INFO  (main) [   ] o.a.s.l.LogWatcher SLF4J impl is org.slf4j.impl.Log4jLoggerFactory
+2017-12-05 07:04:04.892 INFO  (main) [   ] o.a.s.l.LogWatcher Registering Log Listener [Log4j (org.slf4j.impl.Log4jLoggerFactory)]
+2017-12-05 07:04:04.901 INFO  (main) [   ] o.a.s.c.CoreContainer Security conf doesn't exist. Skipping setup for authorization module.
+2017-12-05 07:04:04.902 INFO  (main) [   ] o.a.s.c.CoreContainer No authentication plugin used.
+2017-12-05 07:04:05.463 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Looking for core definitions underneath /var/www/mystore/solr/server/solr
+2017-12-05 07:04:05.513 INFO  (main) [   ] o.a.s.c.CoreDescriptor Created CoreDescriptor: {solr.replication.pollInterval=00:00:60, solr.autoCommit.MaxDocs=10000, solr.replication.confFiles=schema.xml,mapping-ISOLatin1Accent.txt,protwords.txt,stopwords.txt,synonyms.txt,elevate.xml, loadOnStartup=true, solr.replication.master=false, solr.install.dir=../../.., solr.mlt.timeAllowed=2000, solr.pinkPony.timeAllowed=-1, solr.autoSoftCommit.MaxTime=10000, schema=schema.xml, solr.replication.masterUrl=http://localhost:8983/solr, solr.autoSoftCommit.MaxDocs=2000, solr.luceneMatchVersion=5.0, configSetProperties=configsetprops.json, solr.autoCommit.MaxTime=120000, dataDir=data, transient=false, config=solrconfig.xml, solr.replication.slave=false, name=drupal}
+2017-12-05 07:04:05.514 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Found core drupal in /var/www/mystore/solr/server/solr/drupal
+2017-12-05 07:04:05.520 INFO  (main) [   ] o.a.s.c.CorePropertiesLocator Found 1 core definitions
+2017-12-05 07:04:05.532 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter user.dir=/var/www/mystore/solr/server
+2017-12-05 07:04:05.533 INFO  (main) [   ] o.a.s.s.SolrDispatchFilter SolrDispatchFilter.init() done
+2017-12-05 07:04:05.556 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader new SolrResourceLoader for directory: '/var/www/mystore/solr/server/solr/drupal'
+2017-12-05 07:04:05.558 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader JNDI not configured for solr (NoInitialContextEx)
+2017-12-05 07:04:05.563 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader using system property solr.solr.home: /var/www/mystore/solr/server/solr
+2017-12-05 07:04:05.613 INFO  (main) [   ] o.e.j.s.h.ContextHandler Started o.e.j.w.WebAppContext@e25b2fe{/solr,file:/var/www/mystore/solr/server/solr-webapp/webapp/,AVAILABLE}{/var/www/mystore/solr/server/solr-webapp/webapp}
+2017-12-05 07:04:05.810 INFO  (main) [   ] o.e.j.s.ServerConnector Started ServerConnector@3c41ed1d{HTTP/1.1}{0.0.0.0:8983}
+2017-12-05 07:04:05.811 INFO  (main) [   ] o.e.j.s.Server Started @13682ms
+2017-12-05 07:04:05.828 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig current version of requestparams : -1
+2017-12-05 07:04:05.836 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig Adding specified lib dirs to ClassLoader
+2017-12-05 07:04:05.852 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/apache-mime4j-core-0.7.2.jar' to classloader
+2017-12-05 07:04:05.853 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/juniversalchardet-1.0.3.jar' to classloader
+2017-12-05 07:04:05.853 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/bcprov-jdk15-1.45.jar' to classloader
+2017-12-05 07:04:05.853 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/commons-compress-1.8.1.jar' to classloader
+2017-12-05 07:04:05.853 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/isoparser-1.0.2.jar' to classloader
+2017-12-05 07:04:05.853 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/jdom-1.0.jar' to classloader
+2017-12-05 07:04:05.853 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/boilerpipe-1.1.0.jar' to classloader
+2017-12-05 07:04:05.853 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/jempbox-1.8.8.jar' to classloader
+2017-12-05 07:04:05.853 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/poi-ooxml-schemas-3.11.jar' to classloader
+2017-12-05 07:04:05.853 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/pdfbox-1.8.8.jar' to classloader
+2017-12-05 07:04:05.853 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/poi-scratchpad-3.11.jar' to classloader
+2017-12-05 07:04:05.854 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/vorbis-java-tika-0.6.jar' to classloader
+2017-12-05 07:04:05.854 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/rome-1.0.jar' to classloader
+2017-12-05 07:04:05.854 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/jmatio-1.0.jar' to classloader
+2017-12-05 07:04:05.854 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/metadata-extractor-2.6.2.jar' to classloader
+2017-12-05 07:04:05.854 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/aspectjrt-1.8.0.jar' to classloader
+2017-12-05 07:04:05.854 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/tika-java7-1.7.jar' to classloader
+2017-12-05 07:04:05.854 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/tika-core-1.7.jar' to classloader
+2017-12-05 07:04:05.854 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/tagsoup-1.2.1.jar' to classloader
+2017-12-05 07:04:05.854 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/java-libpst-0.8.1.jar' to classloader
+2017-12-05 07:04:05.855 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/xmlbeans-2.6.0.jar' to classloader
+2017-12-05 07:04:05.855 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/xz-1.5.jar' to classloader
+2017-12-05 07:04:05.855 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/fontbox-1.8.8.jar' to classloader
+2017-12-05 07:04:05.855 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/bcmail-jdk15-1.45.jar' to classloader
+2017-12-05 07:04:05.855 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/tika-parsers-1.7.jar' to classloader
+2017-12-05 07:04:05.855 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/icu4j-54.1.jar' to classloader
+2017-12-05 07:04:05.855 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/xmpcore-5.1.2.jar' to classloader
+2017-12-05 07:04:05.855 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/vorbis-java-core-0.6.jar' to classloader
+2017-12-05 07:04:05.856 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/apache-mime4j-dom-0.7.2.jar' to classloader
+2017-12-05 07:04:05.856 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/poi-ooxml-3.11.jar' to classloader
+2017-12-05 07:04:05.856 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/poi-3.11.jar' to classloader
+2017-12-05 07:04:05.856 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/tika-xmp-1.7.jar' to classloader
+2017-12-05 07:04:05.856 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/extraction/lib/xercesImpl-2.9.1.jar' to classloader
+2017-12-05 07:04:05.856 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/dist/solr-cell-5.5.4.jar' to classloader
+2017-12-05 07:04:05.857 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/clustering/lib/carrot2-guava-18.0.jar' to classloader
+2017-12-05 07:04:05.857 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/clustering/lib/jackson-annotations-2.5.4.jar' to classloader
+2017-12-05 07:04:05.857 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/clustering/lib/attributes-binder-1.2.3.jar' to classloader
+2017-12-05 07:04:05.857 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/clustering/lib/mahout-math-0.6.jar' to classloader
+2017-12-05 07:04:05.857 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/clustering/lib/jackson-databind-2.5.4.jar' to classloader
+2017-12-05 07:04:05.857 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/clustering/lib/carrot2-mini-3.10.4.jar' to classloader
+2017-12-05 07:04:05.858 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/clustering/lib/mahout-collections-1.0.jar' to classloader
+2017-12-05 07:04:05.858 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/clustering/lib/simple-xml-2.7.1.jar' to classloader
+2017-12-05 07:04:05.858 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/dist/solr-clustering-5.5.4.jar' to classloader
+2017-12-05 07:04:05.858 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/langid/lib/jsonic-1.2.7.jar' to classloader
+2017-12-05 07:04:05.858 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/langid/lib/langdetect-1.1-20120112.jar' to classloader
+2017-12-05 07:04:05.858 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/dist/solr-langid-5.5.4.jar' to classloader
+2017-12-05 07:04:05.859 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/velocity/lib/velocity-1.7.jar' to classloader
+2017-12-05 07:04:05.859 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/velocity/lib/commons-collections-3.2.2.jar' to classloader
+2017-12-05 07:04:05.859 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/velocity/lib/velocity-tools-2.0.jar' to classloader
+2017-12-05 07:04:05.859 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/contrib/velocity/lib/commons-beanutils-1.8.3.jar' to classloader
+2017-12-05 07:04:05.859 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrResourceLoader Adding 'file:/var/www/mystore/solr/dist/solr-velocity-5.5.4.jar' to classloader
+2017-12-05 07:04:08.510 WARN  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.Config Solr no longer supports forceful unlocking via the 'unlockOnStartup' option.  This is no longer necessary for the default lockType except in situations where it would be dangerous and should not be done.  For other lockTypes and/or directoryFactory options it may also be dangerous and users must resolve problematic locks manually.
+2017-12-05 07:04:08.632 WARN  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.Config Beginning with Solr 5.5, <mergePolicy> is deprecated, use <mergePolicyFactory> instead.
+2017-12-05 07:04:08.632 WARN  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.Config Beginning with Solr 5.5, <mergeFactor> is deprecated, configure it on the relevant <mergePolicyFactory> instead.
+2017-12-05 07:04:08.638 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.u.SolrIndexConfig IndexWriter infoStream solr logging is enabled
+2017-12-05 07:04:08.701 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig Using Lucene MatchVersion: 5.0.0
+2017-12-05 07:04:09.219 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.SolrConfig Loaded SolrConfig: solrconfig.xml
+2017-12-05 07:04:09.400 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema [drupal] Schema name=drupal-4.7-solr-5.x
+2017-12-05 07:04:10.607 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.s.IndexSchema unique key field: id
+2017-12-05 07:04:10.865 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.ConfigSetProperties Did not find ConfigSet properties, assuming default properties: Can't find resource 'configsetprops.json' in classpath or '/var/www/mystore/solr/server/solr/drupal'
+2017-12-05 07:04:10.866 INFO  (coreLoadExecutor-6-thread-1) [   ] o.a.s.c.CoreContainer Creating SolrCore 'drupal' using configuration from instancedir /var/www/mystore/solr/server/solr/drupal
+2017-12-05 07:04:11.075 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.SolrCore solr.NRTCachingDirectoryFactory
+2017-12-05 07:04:11.122 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.SolrCore [[drupal] ] Opening new SolrCore at [/var/www/mystore/solr/server/solr/drupal], dataDir=[/var/www/mystore/solr/server/solr/drupal/data/]
+2017-12-05 07:04:11.122 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.SolrCore JMX monitoring not detected for core: drupal
+2017-12-05 07:04:11.130 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.SolrCore [[drupal] ] Added SolrEventListener for newSearcher: [org.apache.solr.core.QuerySenderListener{queries=[]}]
+2017-12-05 07:04:11.131 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.SolrCore [[drupal] ] Added SolrEventListener for firstSearcher: [org.apache.solr.core.QuerySenderListener{queries=[{q=solr rocks,start=0,rows=10}]}]
+2017-12-05 07:04:11.143 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.SchemaCodecFactory Using default compressionMode: BEST_SPEED
+2017-12-05 07:04:11.444 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.CachingDirectoryFactory return new directory for /var/www/mystore/solr/server/solr/drupal/data
+2017-12-05 07:04:11.445 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.SolrCore New index directory detected: old=null new=/var/www/mystore/solr/server/solr/drupal/data/index/
+2017-12-05 07:04:11.446 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.CachingDirectoryFactory return new directory for /var/www/mystore/solr/server/solr/drupal/data/index
+2017-12-05 07:04:11.482 INFO  (OldIndexDirectoryCleanupThreadForCore-drupal) [   x:drupal] o.a.s.c.SolrCore Looking for old index directories to cleanup for core drupal in /var/www/mystore/solr/server/solr/drupal/data/
+2017-12-05 07:04:11.489 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.r.XSLTResponseWriter xsltCacheLifetimeSeconds=5
+2017-12-05 07:04:12.051 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.SolrCore no updateRequestProcessorChain defined as default, creating implicit default
+2017-12-05 07:04:12.322 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.h.l.XMLLoader xsltCacheLifetimeSeconds=60
+2017-12-05 07:04:12.325 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.PluginBag requestHandler : '/update/json' created with startup=lazy 
+2017-12-05 07:04:12.325 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.PluginBag requestHandler : '/update/csv' created with startup=lazy 
+2017-12-05 07:04:12.326 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.h.l.XMLLoader xsltCacheLifetimeSeconds=60
+2017-12-05 07:04:12.355 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.PluginBag requestHandler : '/update/extract' created with startup=lazy 
+2017-12-05 07:04:12.355 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.PluginBag requestHandler : '/update/xslt' created with startup=lazy 
+2017-12-05 07:04:12.356 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.PluginBag requestHandler : '/analysis/field' created with startup=lazy 
+2017-12-05 07:04:12.356 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.PluginBag requestHandler : '/analysis/document' created with startup=lazy 
+2017-12-05 07:04:12.359 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.PluginBag requestHandler : '/spell' created with startup=lazy 
+2017-12-05 07:04:12.360 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.PluginBag requestHandler : '/tvrh' created with startup=lazy 
+2017-12-05 07:04:12.360 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.PluginBag requestHandler : '/terms' created with startup=lazy 
+2017-12-05 07:04:12.360 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.PluginBag requestHandler : '/elevate' created with startup=lazy 
+2017-12-05 07:04:12.361 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.RequestHandlers Registered paths: /admin/mbeans,standard,,/update/json/docs,/admin/luke,/export,pinkPony,/get,/admin/properties,/elevate,/update/json,/admin/threads,/query,/analysis/field,/analysis/document,/spell,/update/csv,/tvrh,/admin/segments,/mlt,/admin/system,/replication,/config,/schema,/update/xslt,/admin/plugins,/admin/logging,/admin/ping,/update,/admin/file,/debug/dump,/terms,/update/extract
+2017-12-05 07:04:12.363 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.SolrCore Using default statsCache cache: org.apache.solr.search.stats.LocalStatsCache
+2017-12-05 07:04:12.379 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.u.UpdateHandler Using UpdateLog implementation: org.apache.solr.update.UpdateLog
+2017-12-05 07:04:12.380 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.u.UpdateLog Initializing UpdateLog: dataDir= defaultSyncLevel=FLUSH numRecordsToKeep=100 maxNumLogsToKeep=10 numVersionBuckets=65536
+2017-12-05 07:04:12.743 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.u.CommitTracker Hard AutoCommit: if uncommited for 120000ms; if 10000 uncommited docs 
+2017-12-05 07:04:12.743 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.u.CommitTracker Soft AutoCommit: if uncommited for 10000ms; if 2000 uncommited docs 
+2017-12-05 07:04:13.010 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.SolrDeletionPolicy SolrDeletionPolicy.onInit: commits: num=1
+	commit{dir=NRTCachingDirectory(MMapDirectory@/var/www/mystore/solr/server/solr/drupal/data/index lockFactory=org.apache.lucene.store.NativeFSLockFactory@1d12d077; maxCacheMB=48.0 maxMergeSizeMB=4.0),segFN=segments_13,generation=39}
+2017-12-05 07:04:13.011 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.SolrDeletionPolicy newest commit generation = 39
+2017-12-05 07:04:13.256 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.s.SolrIndexSearcher Opening Searcher@7b99a6db[drupal] main
+2017-12-05 07:04:13.291 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.r.ManagedResourceStorage File-based storage initialized to use dir: /var/www/mystore/solr/server/solr/drupal/conf
+2017-12-05 07:04:13.291 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.r.RestManager Initializing RestManager with initArgs: {storageDir=/var/www/mystore/solr/server/solr/drupal/conf}
+2017-12-05 07:04:13.412 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.r.ManagedResourceStorage Reading _rest_managed.json using file:dir=/var/www/mystore/solr/server/solr/drupal/conf
+2017-12-05 07:04:13.414 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.r.RestManager Initializing 0 registered ManagedResources
+2017-12-05 07:04:13.451 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.h.c.QueryElevationComponent Loading QueryElevation from: /var/www/mystore/solr/server/solr/drupal/conf/elevate.xml
+2017-12-05 07:04:13.519 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.h.c.SpellCheckComponent Initializing spell checkers
+2017-12-05 07:04:13.593 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.h.c.SpellCheckComponent Registering newSearcher listener for spellchecker: default
+2017-12-05 07:04:13.594 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.h.c.SpellCheckComponent No queryConverter defined, using default converter
+2017-12-05 07:04:13.598 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.h.ReplicationHandler Commits will be reserved for  10000
+2017-12-05 07:04:13.600 INFO  (searcherExecutor-7-thread-1-processing-x:drupal) [   x:drupal] o.a.s.c.QuerySenderListener QuerySenderListener sending requests to Searcher@7b99a6db[drupal] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_1k(5.5.4):C28)))}
+2017-12-05 07:04:13.602 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.u.UpdateLog Looking up max value of version field to seed version buckets
+2017-12-05 07:04:13.604 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.u.VersionInfo Refreshing highest value of _version_ for 65536 version buckets from index
+2017-12-05 07:04:13.685 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.u.VersionInfo Found MAX value 1585627464102576128 from Terms for _version_ in index
+2017-12-05 07:04:13.701 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.u.UpdateLog Took 98.0ms to seed version buckets with highest version 1585627464102576128
+2017-12-05 07:04:13.706 INFO  (coreLoadExecutor-6-thread-1) [   x:drupal] o.a.s.c.CoreContainer registering core: drupal
+2017-12-05 07:04:13.872 INFO  (searcherExecutor-7-thread-1-processing-x:drupal) [   x:drupal] o.a.s.c.S.Request [drupal]  webapp=null path=null params={q=solr+rocks&distrib=false&start=0&rows=10&event=firstSearcher} hits=0 status=0 QTime=268
+2017-12-05 07:04:13.874 INFO  (searcherExecutor-7-thread-1-processing-x:drupal) [   x:drupal] o.a.s.c.QuerySenderListener QuerySenderListener done.
+2017-12-05 07:04:13.874 INFO  (searcherExecutor-7-thread-1-processing-x:drupal) [   x:drupal] o.a.s.h.c.SpellCheckComponent Loading spell index for spellchecker: default
+2017-12-05 07:04:13.877 INFO  (searcherExecutor-7-thread-1-processing-x:drupal) [   x:drupal] o.a.s.c.SolrCore [drupal] Registered new searcher Searcher@7b99a6db[drupal] main{ExitableDirectoryReader(UninvertingDirectoryReader(Uninverting(_1k(5.5.4):C28)))}
+2017-12-05 07:04:16.934 INFO  (qtp1450821318-13) [   x:drupal] o.a.s.c.S.Request [drupal]  webapp=/solr path=/admin/system params={json.nl=flat&omitHeader=true&wt=json} status=0 QTime=197
+2017-12-05 07:04:18.027 INFO  (qtp1450821318-16) [   x:drupal] o.a.s.c.S.Request [drupal]  webapp=/solr path=/select params={f.ss_number.facet.limit=-1&hl=true&f.its_attribute_rozmir.facet.limit=-1&fl=*,score&facet.missing=false&f.its_attribute_rozmir.facet.missing=false&fq=(%2Bss_search_api_language:"uk"+%2Bbs_field_on_catalog:"true")+(%2Bss_search_api_language:"und"+%2Bbs_field_on_catalog:"true")+(%2Bss_search_api_language:"zxx"+%2Bbs_field_on_catalog:"true")&fq=index_id:"products_variations"&defType=edismax&f.its_attribute_size.facet.limit=-1&qf=&wt=json&facet.field={!key%3Dits_attribute_kolir+ex%3Dfacet:attribute_kolir}its_attribute_kolir&facet.field={!key%3Dss_number+ex%3Dfacet:number}ss_number&facet.field={!key%3Dits_attribute_size+ex%3Dfacet:attribute_size}its_attribute_size&facet.field={!key%3Dits_attribute_rozmir+ex%3Dfacet:attribute_rozmir}its_attribute_rozmir&json.nl=flat&start=0&rows=24&q=*:*&facet.limit=10&f.its_attribute_kolir.facet.limit=-1&f.ss_number.facet.missing=false&omitHeader=true&f.its_attribute_size.facet.missing=false&facet.mincount=1&facet=true&facet.sort=count&f.its_attribute_kolir.facet.missing=false} hits=14 status=0 QTime=341
+2017-12-05 07:19:16.672 INFO  (qtp1450821318-15) [   x:drupal] o.a.s.c.S.Request [drupal]  webapp=/solr path=/select params={q=*:*&defType=edismax&json.nl=flat&hl=true&omitHeader=true&qf=&fl=*,score&start=0&fq=(%2Bss_search_api_language:"uk"+%2B(%2Bbs_field_on_catalog:"true"+%2B(*:*+-its_product_id_1:"14")))+(%2Bss_search_api_language:"und"+%2B(%2Bbs_field_on_catalog:"true"+%2B(*:*+-its_product_id_1:"14")))+(%2Bss_search_api_language:"zxx"+%2B(%2Bbs_field_on_catalog:"true"+%2B(*:*+-its_product_id_1:"14")))&fq=(%2Bss_search_api_language:"uk"+%2Bits_tid:"26")+(%2Bss_search_api_language:"und"+%2Bits_tid:"26")+(%2Bss_search_api_language:"zxx"+%2Bits_tid:"26")&fq=index_id:"products_variations"&rows=5&wt=json} hits=3 status=0 QTime=339
+2017-12-05 07:22:30.096 INFO  (qtp1450821318-15) [   x:drupal] o.a.s.c.S.Request [drupal]  webapp=/solr path=/select params={q=*:*&defType=edismax&json.nl=flat&hl=true&omitHeader=true&qf=&fl=*,score&start=0&fq=(%2Bss_search_api_language:"uk"+%2B(%2Bbs_field_on_catalog:"true"+%2B(*:*+-its_product_id_1:"14")))+(%2Bss_search_api_language:"und"+%2B(%2Bbs_field_on_catalog:"true"+%2B(*:*+-its_product_id_1:"14")))+(%2Bss_search_api_language:"zxx"+%2B(%2Bbs_field_on_catalog:"true"+%2B(*:*+-its_product_id_1:"14")))&fq=(%2Bss_search_api_language:"uk"+%2Bits_tid:"26")+(%2Bss_search_api_language:"und"+%2Bits_tid:"26")+(%2Bss_search_api_language:"zxx"+%2Bits_tid:"26")&fq=index_id:"products_variations"&rows=5&wt=json} hits=3 status=0 QTime=6

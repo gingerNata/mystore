@@ -6,3 +6,21 @@ dadi.wishlist_ajax_link_controller_addToWishlist:
     _title: 'addToWishlist'
   requirements:
     _permission: 'access wishlist'
+
+
+dadi.subscribe_controller_reset:
+  path: '/dadi/reset/subscribe'
+  defaults:
+    _controller: '\Drupal\dadi\Controller\SubscribeController::resetSubscribe'
+    _title: 'openPopup'
+  requirements:
+    _permission: 'access content'
+
+dadi.subscribe_controller_subscribe:
+  path: '/dadi/submit/subscribe/{email}'
+  defaults:
+    _controller: '\Drupal\dadi\Controller\SubscribeController::submitSubscribe'
+    _title: 'openPopup'
+  requirements:
+    _permission: 'access content'
+    email: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$'
