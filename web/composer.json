@@ -10,7 +10,7 @@
         "drupal/composer_manager": "^1.0",
         "drupal/console": "^1.0",
         "drupal/console-launcher": "^1.0",
-        "drupal/core": "8.4.2",
+        "drupal/core": "^8.4.2",
         "drupal/devel": "^1.2",
         "drupal/drupal8_zymphonies_theme": "^1.0",
         "drupal/easy_breadcrumb": "^1.6",
