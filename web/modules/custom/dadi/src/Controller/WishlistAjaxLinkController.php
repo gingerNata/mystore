@@ -13,10 +13,9 @@ use Drupal\commerce_product\Entity\ProductVariation as Entity;
 class WishlistAjaxLinkController extends ControllerBase {
 
   /**
-   * Addtowishlist.
+   * Add to wishlist.
    *
    * @return string
-   *   Return Hello string.
    */
   public function addToWishlist($id) {
     # New response
@@ -29,6 +28,9 @@ class WishlistAjaxLinkController extends ControllerBase {
     return $response;
   }
 
+  /**
+   * @param $id
+   */
   public function createWishItem($id){
 
     $entity = Entity::load($id);

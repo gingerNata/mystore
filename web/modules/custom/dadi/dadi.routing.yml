@@ -24,3 +24,19 @@ dadi.subscribe_controller_subscribe:
   requirements:
     _permission: 'access content'
     email: '[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$'
+
+dadi.size_popup_controller_openPopup:
+  path: '/ajax/size-information'
+  defaults:
+    _controller: '\Drupal\dadi\Controller\SizePopupController::openPopup'
+    _title: 'Size information'
+  requirements:
+    _permission: 'access content'
+
+dadi.size_popup_controller_popupWithShoesSizes:
+  path: '/ajax/shoes-size-information'
+  defaults:
+    _controller: '\Drupal\dadi\Controller\SizePopupController::popupWithShoesSizes'
+    _title: 'Size information'
+  requirements:
+    _permission: 'access content'

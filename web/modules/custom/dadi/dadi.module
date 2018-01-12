@@ -5,6 +5,7 @@
  * Contains dadi.module.
  */
 
+use Drupal\commerce_product\Entity\ProductType;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity;
 use Drupal\commerce_product\Entity\ProductVariationType;
@@ -148,6 +149,15 @@ function dadi_entity_extra_field_info() {
       'visible' => TRUE,
     );
   }
+  
+  foreach (ProductType::loadMultiple() as $bundle) {
+    $extra['commerce_product'][$bundle->Id()]['display']['size_block'] = array(
+      'label' => t('Size block'),
+      'description' => t('Popup with sizes'),
+      'weight' => 101,
+      'visible' => TRUE,
+    );
+  }
 
   return $extra;
 }
@@ -170,6 +180,33 @@ function dadi_entity_view(array &$build, EntityInterface $entity, EntityViewDisp
       href="/ajax/addtowishlist/' . $id . '"> ' . $link_text . '</a>',
     ];
   }
+  elseif ($display->getComponent('size_block')) {
+    $link_text = t("Size information");
+    $type = $display->get('bundle');
+    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+    switch ($type) {
+      case 'vzutta':
+        $markup = '<a class="use-ajax size-information" id="size-information" href="/'
+         . $language . '/ajax/shoes-size-information/">' . $link_text . '</a>';
+        break;
+      case 'default':
+        $markup = '<a class="use-ajax size-information" id="size-information" href="/'
+          . $language . '/ajax/size-information/">' . $link_text . '</a>';
+        break;
+      default:
+        $markup = '';
+    }
+    $build['size_block'] = [
+      '#type' => 'markup',
+      '#attached' => array(
+        'library' => array(
+          'dadi/wish-button',
+        ),
+      ),
+      '#markup' => $markup,
+    ];
+  }
 }
 
 /**
@@ -185,17 +222,3 @@ function dadi_preprocess_page(&$variables) {
 }
 
 
-/**
- * This change filter and exclude current product from block "Similar products"
- *
- * Implements hook_views_pre_build().
- */
-function dadi_views_pre_build(ViewExecutable $view) {
-//  if ($view->storage->get('id') == 'products' && $view->current_display == 'block_1'){
-//    $path = \Drupal::request()->getpathInfo();
-//    $arg  = explode('/',$path);
-//    if ($arg[2] == 'product' && isset($arg[3])){
-//      $view->filter['product_id_1']->value['value'] = $arg[3];
-//    }
-//  }
-}
