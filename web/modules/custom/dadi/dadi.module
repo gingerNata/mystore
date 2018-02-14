@@ -62,8 +62,7 @@ function dadi_form_alter(&$form, FormStateInterface $form_state, $form_id) {
       $form['actions']['submit']['#ajax'] = [
         'callback' => 'comment_ajax_callback',
         'wrapper' => 'comment-form',
-
-    ];
+        ];
       break;
   }
 }

@@ -1,0 +1,425 @@
+diff --git a/config/schema/term_reference_tree.schema.yml b/config/schema/term_reference_tree.schema.yml
+new file mode 100644
+index 0000000..299e8fd
+--- /dev/null
++++ b/config/schema/term_reference_tree.schema.yml
+@@ -0,0 +1,19 @@
++field.widget.settings.term_reference_tree:
++  type: mapping
++  label: 'Term reference tree widget settings'
++  mapping:
++    start_minimized:
++      type: boolean
++      label: 'Start minimized'
++    leaves_only:
++      type: boolean
++      label: 'Leaves only'
++    select_parents:
++      type: boolean
++      label: 'Select parents automatically'
++    cascading_selection:
++      type: integer
++      label: 'Cascading selection'
++    max_depth:
++      type: integer
++      label: 'Maximum Depth'
+\ No newline at end of file
+diff --git a/src/Plugin/Field/FieldWidget/TermReferenceTree.php b/src/Plugin/Field/FieldWidget/TermReferenceTree.php
+index 0d309f2..586d755 100644
+--- a/src/Plugin/Field/FieldWidget/TermReferenceTree.php
++++ b/src/Plugin/Field/FieldWidget/TermReferenceTree.php
+@@ -1,16 +1,16 @@
+-<?php /**
+- * @file
+- * Contains \Drupal\term_reference_tree\Plugin\Field\FieldWidget\TermReferenceTree.
+- */
++<?php
+
+ namespace Drupal\term_reference_tree\Plugin\Field\FieldWidget;
+
+ use Drupal\Core\Field\FieldItemListInterface;
+ use Drupal\Core\Field\WidgetBase;
+ use Drupal\Core\Form\FormStateInterface;
++use Drupal\field\Entity\FieldStorageConfig;
+ use Drupal\taxonomy\Entity\Vocabulary;
+
+ /**
++ * Plugin implementation of the 'term_reference_tree' widget.
++ *
+  * @FieldWidget(
+  *   id = "term_reference_tree",
+  *   label = @Translation("Term reference tree"),
+@@ -19,19 +19,121 @@ use Drupal\taxonomy\Entity\Vocabulary;
+  * )
+  */
+ class TermReferenceTree extends WidgetBase {
++  const CASCADING_SELECTION_NONE = '0';
++  const CASCADING_SELECTION_BOTH = '1';
++  const CASCADING_SELECTION_SELECT = '2';
++  const CASCADING_SELECTION_DESELECT = '3';
+
+- /**
++  /**
+    * {@inheritdoc}
+    */
+   public static function defaultSettings() {
+-    return parent::defaultSettings();
++    return [
++      'start_minimized' => TRUE,
++      'leaves_only' => FALSE,
++      'select_parents' => FALSE,
++      'cascading_selection' => self::CASCADING_SELECTION_NONE,
++      'max_depth' => 0,
++    ] + parent::defaultSettings();
+   }
+
+   /**
+    * {@inheritdoc}
+    */
+   public function settingsForm(array $form, FormStateInterface $form_state) {
+-    return parent::settingsForm($form, $form_state);
++    $form = parent::settingsForm($form, $form_state);
++
++    $form['start_minimized'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Start minimized'),
++      '#description' => $this->t('Make the tree appear minimized on the form by default'),
++      '#default_value' => $this->getSetting('start_minimized'),
++    ];
++
++    $form['leaves_only'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Leaves only'),
++      '#description' => $this->t("Don't allow the user to select items that have children"),
++      '#default_value' => $this->getSetting('leaves_only'),
++      '#return_value' => 1,
++    ];
++
++    $form['select_parents'] = [
++      '#type' => 'checkbox',
++      '#title' => $this->t('Select parents automatically'),
++      '#description' => $this->t("When turned on, this option causes the widget to automatically select the ancestors of all selected items. In Leaves Only mode, the parents will be added invisibly to the selected value.  <em>This option is only valid if an unlimited number of values can be selected.</em>"),
++      '#default_value' => $this->getSetting('select_parents'),
++      '#return_value' => 1,
++    ];
++
++    $form['cascading_selection'] = [
++      '#type' => 'select',
++      '#title' => $this->t('Cascading selection'),
++      '#description' => $this->t('On parent selection, automatically select children if none were selected. Some may then be manually unselected. In the same way, on parent unselection, unselect children if all were selected. <em>This option is only valid if an unlimited number of values can be selected.</em>'),
++      '#default_value' => $this->getSetting('cascading_selection'),
++      '#options' => [
++        self::CASCADING_SELECTION_NONE => $this->t('None'),
++        self::CASCADING_SELECTION_BOTH => $this->t('Select / deselect'),
++        self::CASCADING_SELECTION_SELECT => $this->t('Only select'),
++        self::CASCADING_SELECTION_DESELECT => $this->t('Only deselect'),
++      ],
++    ];
++
++    if ($this->fieldDefinition->getFieldStorageDefinition()->getCardinality() !== FieldStorageConfig::CARDINALITY_UNLIMITED) {
++      $form['select_parents']['#disabled'] = TRUE;
++      $form['select_parents']['#default_value'] = FALSE;
++      $form['select_parents']['#description'] .= ' <em>' . $this->t("This option is only valid if an unlimited number of values can be selected.") . '</em>';
++
++      $form['cascading_selection']['#disabled'] = TRUE;
++      $form['cascading_selection']['#default_value'] = self::CASCADING_SELECTION_NONE;
++      $form['cascading_selection']['#description'] .= ' <em>' . $this->t("This option is only valid if an unlimited number of values can be selected.") . '</em>';
++    }
++
++    $form['max_depth'] = [
++      '#type' => 'number',
++      '#title' => $this->t('Maximum Depth'),
++      '#description' => $this->t("Only show items up to this many levels deep."),
++      '#default_value' => $this->getSetting('max_depth'),
++      '#min' => 0,
++    ];
++
++    return $form;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function settingsSummary() {
++    $summary = [];
++
++    if ($this->getSetting('start_minimized')) {
++      $summary[] = $this->t('Start minimized');
++    }
++
++    if ($this->getSetting('leaves_only')) {
++      $summary[] = $this->t('Leaves only');
++    }
++
++    if ($this->getSetting('select_parents')) {
++      $summary[] = $this->t('Select parents automatically');
++    }
++
++    $cascadingSelection = $this->getSetting('cascading_selection');
++    if ($cascadingSelection == self::CASCADING_SELECTION_BOTH) {
++      $summary[] = $this->t('Cascading selection');
++    }
++    elseif ($cascadingSelection == self::CASCADING_SELECTION_SELECT) {
++      $summary[] = sprintf('%s (%s)', $this->t('Cascading selection'), $this->t('Only select'));
++    }
++    elseif ($cascadingSelection == self::CASCADING_SELECTION_DESELECT) {
++      $summary[] = sprintf('%s (%s)', $this->t('Cascading selection'), $this->t('Only deselect'));
++    }
++
++    if ($this->getSetting('max_depth')) {
++      $summary[] = $this->formatPlural($this->getSetting('max_depth'), 'Maximum Depth: @count level', 'Maximum Depth: @count levels');
++    }
++
++    return $summary;
+   }
+
+   /**
+@@ -45,10 +147,12 @@ class TermReferenceTree extends WidgetBase {
+     $element['#default_value'] = $items->getValue();
+     $element['#vocabularies'] = $vocabularies;
+     $element['#max_choices'] = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
+-    $element['#leaves_only'] = FALSE;
++    $element['#leaves_only'] = $this->getSetting('leaves_only');
++    $element['#select_parents'] = $this->getSetting('select_parents');
++    $element['#cascading_selection'] = $this->getSetting('cascading_selection');
+     $element['#value_key'] = 'target_id';
+-    $element['#max_depth'] = 0;
+-    $element['#start_minimized'] = TRUE;
++    $element['#max_depth'] = $this->getSetting('max_depth');
++    $element['#start_minimized'] = $this->getSetting('start_minimized');
+     $element['#element_validate'] = [[get_class($this), 'validateTermReferenceTreeElement']];
+     return $element;
+   }
+@@ -62,32 +166,31 @@ class TermReferenceTree extends WidgetBase {
+     if ($element['#max_choices'] != 1) {
+       foreach ($items as $child) {
+         if (!empty($child['#value'])) {
+-          array_push($value, array($element['#value_key'] => $child['#value']));
+-
+-          // If the element is leaves only and select parents is on, then automatically
+-          // add all the parents of each selected value.
++          // If the element is leaves only and select parents is on,
++          // then automatically add all the parents of each selected value.
+           if (!empty($element['#select_parents']) && !empty($element['#leaves_only'])) {
+             foreach ($child['#parent_values'] as $parent_tid) {
+-              if (!in_array(array($element['#value_key'] => $parent_tid), $value)) {
+-                array_push($value, array($element['#value_key'] => $parent_tid));
++              if (!in_array([$element['#value_key'] => $parent_tid], $value)) {
++                array_push($value, [$element['#value_key'] => $parent_tid]);
+               }
+             }
+           }
++          array_push($value, [$element['#value_key'] => $child['#value']]);
+         }
+       }
+     }
+     else {
+-      // If it's a tree of radio buttons, they all have the same value, so we can just
+-      // grab the value of the first one.
++      // If it's a tree of radio buttons, they all have the same value,
++      // so we can just grab the value of the first one.
+       if (count($items) > 0) {
+         $child = reset($items);
+         if (!empty($child['#value'])) {
+-          array_push($value, array($element['#value_key'] => $child['#value']));
++          array_push($value, [$element['#value_key'] => $child['#value']]);
+         }
+       }
+     }
+     if ($element['#required'] && empty($value)) {
+-      $form_state->setError($element, t('%name field is required.', array('%name' => $element['#title'])));
++      $form_state->setError($element, t('%name field is required.', ['%name' => $element['#title']]));
+     }
+     $form_state->setValueForElement($element, $value);
+   }
+diff --git a/term_reference_tree.js b/term_reference_tree.js
+index 61e5ed9..e4755a9 100644
+--- a/term_reference_tree.js
++++ b/term_reference_tree.js
+@@ -18,8 +18,8 @@ Drupal.behaviors.termReferenceTree = {
+     });
+     */
+
++    $('.term-reference-tree', context).once('term-reference-tree').each(function() {
+
+-    $('.term-reference-tree', context).once('term-reference-tree', function() {
+       // On page load, check whether the maximum number of choices is already selected.
+       // If so, disable the other options.
+       var tree = $(this);
+@@ -28,6 +28,11 @@ Drupal.behaviors.termReferenceTree = {
+         checkMaxChoices(tree, $(this));
+       });
+
++      //On page load, check if the user wants a cascading selection.
++      if($(this).hasClass('term-reference-tree-select-parents')) {
++        $(this).find('.form-checkbox').parent().addClass('select-parents');
++      }
++
+       //On page load, check if the user wants a track list. If so, add the
+       //currently selected items to it.
+       if($(this).hasClass('term-reference-tree-track-list-shown')) {
+@@ -35,7 +40,7 @@ Drupal.behaviors.termReferenceTree = {
+
+         //Var to track whether using checkboxes or radio buttons.
+         var input_type =
+-          ( $(this).has('input[type=checkbox]').size() > 0 ) ? 'checkbox' : 'radio';
++          ( $(this).has('input[type=checkbox]').length > 0 ) ? 'checkbox' : 'radio';
+
+         //Find all the checked controls.
+         var checked_controls = $(this).find('input[type=' + input_type + ']:checked');
+@@ -108,25 +113,28 @@ Drupal.behaviors.termReferenceTree = {
+
+       //On page load, check if the user wants a cascading selection.
+       if($(this).hasClass('term-reference-tree-cascading-selection')) {
++        var mode_select = $(this).hasClass('term-reference-tree-cascading-selection-mode-select');
++        var mode_deselect = $(this).hasClass('term-reference-tree-cascading-selection-mode-deselect');
+
+         //Check children when checkboxes are clicked.
+         $(this).find('.form-checkbox').change(function(event) {
+           var event_target = $(event.target);
++          var event_target_checked = event_target.is(':checked');
+           var control_id = event_target.attr('id');
+-          var children = event_target.parent().next().children().children('div.form-type-checkbox').children('input[id^="' + control_id + '-children"]');
+-          if(event_target.attr('checked')) {
+-            //Checkbox checked - check children if none were checked.
+-            if(!$(children).filter(':checked').length) {
+-              $(children).click().trigger('change');
++          var children = event_target.parent().next().children().children('div.js-form-type-checkbox').children('input[id^="' + control_id + '-children"]');
++
++          if (!mode_select && !mode_deselect) {
++            if(event_target_checked) {
++              $(children).filter(':not(:checked)').click().trigger('change');
+             }
+-          }
+-          else {
+-            //Checkbox unchecked. Uncheck children if all were checked.
+-            if(!$(children).not(':checked').length) {
+-              $(children).click().trigger('change');
++            else {
++              $(children).filter(':checked').click().trigger('change');
+             }
++          } else if (mode_select && event_target_checked) {
++            $(children).filter(':not(:checked)').click().trigger('change');
++          } else if (mode_deselect && !event_target_checked) {
++            $(children).filter(':checked').click().trigger('change');
+           }
+-
+         });
+         //End process checkbox changes.
+       } //End Want a cascading checking.
+@@ -161,7 +169,7 @@ function addItemToTrackList(track_list_container, item_text, control_id, control
+     var current_items = track_list_container.find('li');
+
+     //If there are no items on the track list, add the new item.
+-    if ( current_items.size() == 0 ) {
++    if ( current_items.length == 0 ) {
+       track_list_container.append(new_item);
+     }
+     else {
+@@ -216,13 +224,13 @@ function addItemToTrackList(track_list_container, item_text, control_id, control
+ function showNothingSelectedMessage(track_list_container) {
+   //Is the message there already?
+   var message_showing =
+-      (track_list_container.find('.term_ref_tree_nothing_message').size() != 0);
++      (track_list_container.find('.term_ref_tree_nothing_message').length != 0);
+
+   //Number of real items showing.
+   var num_real_items_showing =
+       message_showing
+-      ? track_list_container.find('li').size() - 1
+-      : track_list_container.find('li').size();
++      ? track_list_container.find('li').length - 1
++      : track_list_container.find('li').length;
+   if ( num_real_items_showing == 0 ) {
+     //No items showing, so show the message.
+     if ( ! message_showing ) {
+@@ -265,22 +273,20 @@ function checkMaxChoices(item, checkbox) {
+   }
+
+   if(checkbox) {
+-    if(item.hasClass('select-parents')) {
++    if(item.hasClass('term-reference-tree-select-parents')) {
+       var track_list_container = item.find('.term-reference-tree-track-list');
+-      var input_type =
+-          ( item.has('input[type=checkbox]').size() > 0 ) ? 'checkbox' : 'radio';
+
+-      if(checkbox.attr('checked')) {
+-        checkbox.parents('ul.term-reference-tree-level li').children('div.form-item').children('input[type=checkbox]').each(function() {
+-          $(this).attr('checked', checkbox.attr('checked'));
++      if(checkbox.prop('checked')) {
++        checkbox.parents('ul.term-reference-tree-level li').children('div.form-item').find('input[type=checkbox]').each(function() {
++          $(this).prop('checked', true);
+
+           if(track_list_container) {
+-            label_element = $(this).next();
++            var label_element = $(this).next();
+             addItemToTrackList(
+               track_list_container,         //Where to add new item.
+               label_element.html(),         //Text of new item.
+               $(label_element).attr('for'), //Id of control new item is for.
+-              input_type                    //checkbox or radio
++              (item.has('input[type=checkbox]').length > 0) ? 'checkbox' : 'radio'
+             );
+           }
+         });
+diff --git a/term_reference_tree.module b/term_reference_tree.module
+index 49b7570..dcd9a4f 100644
+--- a/term_reference_tree.module
++++ b/term_reference_tree.module
+@@ -34,6 +34,7 @@ function term_reference_tree_theme() {
+  * Returns HTML for a checkbox_tree form element.
+  */
+ function theme_checkbox_tree($variables) {
++
+   $element = $variables['element'];
+   $element['#children'] = drupal_render_children($element);
+
+@@ -51,17 +52,28 @@ function theme_checkbox_tree($variables) {
+     $attributes['class'][] = "term-reference-tree-collapsed";
+   }
+
+-  if (array_key_exists('#cascading_selection', $element) && $element['#cascading_selection']) {
++  if (array_key_exists('#track_list', $element) && $element['#track_list']) {
++    $attributes['class'][] = "term-reference-tree-track-list-shown";
++  }
++
++  if(!empty($variables['element']['#select_parents'])) {
++    $attributes['class'][] = "term-reference-tree-select-parents";
++  }
++
++  if($variables['element']['#cascading_selection'] != \Drupal\term_reference_tree\Plugin\Field\FieldWidget\TermReferenceTree::CASCADING_SELECTION_NONE) {
+     $attributes['class'][] = "term-reference-tree-cascading-selection";
+   }
+
+-  if (array_key_exists('#track_list', $element) && $element['#track_list']) {
+-    $attributes['class'][] = "term-reference-tree-track-list-shown";
++  if($variables['element']['#cascading_selection'] == \Drupal\term_reference_tree\Plugin\Field\FieldWidget\TermReferenceTree::CASCADING_SELECTION_SELECT) {
++    $attributes['class'][] = "term-reference-tree-cascading-selection-mode-select";
++  } else if($variables['element']['#cascading_selection'] == \Drupal\term_reference_tree\Plugin\Field\FieldWidget\TermReferenceTree::CASCADING_SELECTION_DESELECT) {
++    $attributes['class'][] = "term-reference-tree-cascading-selection-mode-deselect";
+   }
+
+   if (!empty($element['#attributes']['class'])) {
+     $attributes['class'] = array_merge($attributes['class'], $element['#attributes']['class']);
+   }
++
+   return
+     '<div' . new \Drupal\Core\Template\Attribute($attributes) . '>'
+     . (!empty($element['#children']) ? $element['#children'] : '')
+@@ -307,13 +319,15 @@ function _term_reference_tree_build_item($element, $term, $form_state, $value, $
+   else {
+     $term_name = $term->name;
+   }
++
+   $container = array(
+     '#type' => 'checkbox_tree_item',
+     '#max_choices' => $max_choices,
+     '#leaves_only' => $leaves_only,
+     '#term_name' => $term_name,
+     '#level_start_minimized' => FALSE,
+-    '#depth' => $depth,
++    '#select_parents' => $element['#select_parents'],
++    '#depth' => $depth
+   );
+
+   if (!$element['#leaves_only'] || count($term->children) == 0) {

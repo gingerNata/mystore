@@ -1,0 +1,12 @@
+diff --git a/modules/order/config/install/field.storage.profile.address.yml b/modules/order/config/install/field.storage.profile.address.yml
+index 60333aa..a0f96c7 100644
+--- a/modules/order/config/install/field.storage.profile.address.yml
++++ b/modules/order/config/install/field.storage.profile.address.yml
+@@ -13,7 +13,6 @@ entity_type: profile
+ type: address
+ settings: {  }
+ module: address
+-locked: true
+ cardinality: 1
+ translatable: true
+ indexes: {  }

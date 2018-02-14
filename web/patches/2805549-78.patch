@@ -1,0 +1,1015 @@
+diff --git a/modules/order/commerce_order.module b/modules/order/commerce_order.module
+index 77468d8e..3dc551cf 100644
+--- a/modules/order/commerce_order.module
++++ b/modules/order/commerce_order.module
+@@ -43,6 +43,13 @@ function commerce_order_theme($existing, $type, $theme, $path) {
+         'totals' => NULL,
+       ],
+     ],
++    'commerce_price_calculated' => [
++      'variables' => [
++        'base_price' => NULL,
++        'calculated_price' => NULL,
++        'adjustments' => [],
++      ],
++    ],
+   ];
+ }
+
+@@ -182,3 +189,13 @@ function commerce_order_mail($key, &$message, $params) {
+   $message['subject'] = $params['subject'];
+   $message['body'][] = $params['body'];
+ }
++
++/**
++ * Implements hook_field_formatter_info_alter().
++ *
++ * Replaces commerce_price PriceCalculatedFormatter with commerce_order PriceCalculatedFormatter.
++ */
++function commerce_order_field_formatter_info_alter(array &$info) {
++  $info['commerce_price_calculated']['class'] = 'Drupal\commerce_order\Plugin\Field\FieldFormatter\PriceCalculatedFormatter';
++  $info['commerce_price_calculated']['provider'] = 'commerce_order';
++}
+diff --git a/modules/order/commerce_order.services.yml b/modules/order/commerce_order.services.yml
+index 8d8e5d49..a4faafc2 100644
+--- a/modules/order/commerce_order.services.yml
++++ b/modules/order/commerce_order.services.yml
+@@ -62,3 +62,9 @@ services:
+     arguments: ['@current_route_match']
+     tags:
+       - { name: commerce_store.store_resolver, priority: 100 }
++
++  commerce_order.purchasable_entity_price_calculator:
++    class: Drupal\commerce_order\PurchasableEntityPriceCalculator
++    arguments: ['@entity_type.manager', '@commerce_store.current_store', '@current_user', '@commerce_order.chain_order_type_resolver', '@commerce_price.chain_price_resolver', '@request_stack', '@event_dispatcher']
++    tags:
++      - { name: service_collector, call: addProcessor, tag: commerce_order.order_processor }
+diff --git a/modules/order/src/Event/OrderEvents.php b/modules/order/src/Event/OrderEvents.php
+index 0fec9b6c..0095678c 100644
+--- a/modules/order/src/Event/OrderEvents.php
++++ b/modules/order/src/Event/OrderEvents.php
+@@ -145,4 +145,16 @@ final class OrderEvents {
+    */
+   const ORDER_ITEM_DELETE = 'commerce_order.commerce_order_item.delete';
+
++  /**
++   * Name of the event fired before processing an order in the price calculator.
++   *
++   * Use this event to alter property values for the order and/or order item
++   * processed in the calculation of the purchasable entity price.
++   *
++   * @Event
++   *
++   * @see \Drupal\commerce_order\Event\OrderPriceCalculatorEvent
++   */
++  const ORDER_PRICE_CALCULATOR = 'commerce_order.order_price_calculator';
++
+ }
+diff --git a/modules/order/src/Event/OrderPriceCalculatorEvent.php b/modules/order/src/Event/OrderPriceCalculatorEvent.php
+new file mode 100644
+index 00000000..60a33134
+--- /dev/null
++++ b/modules/order/src/Event/OrderPriceCalculatorEvent.php
+@@ -0,0 +1,84 @@
++<?php
++
++namespace Drupal\commerce_order\Event;
++
++use Drupal\commerce_order\Entity\OrderInterface;
++use Drupal\commerce_order\Entity\OrderItemInterface;
++use Drupal\Core\Session\AccountProxyInterface;
++use Symfony\Component\EventDispatcher\Event;
++
++/**
++ * Defines the order assign event.
++ *
++ * @see \Drupal\commerce_order\Event\OrderEvents
++ */
++class OrderPriceCalculatorEvent extends Event {
++
++  /**
++   * The order.
++   *
++   * @var \Drupal\commerce_order\Entity\OrderInterface
++   */
++  protected $order;
++
++  /**
++   * The order item.
++   *
++   * @var \Drupal\commerce_order\Entity\OrderItemInterface
++   */
++  protected $order_item;
++
++  /**
++   * The current user.
++   *
++   * @var \Drupal\Core\Session\AccountProxyInterface
++   */
++  protected $current_user;
++
++  /**
++   * Constructs a new OrderAssignEvent.
++   *
++   * @param \Drupal\commerce_order\Entity\OrderInterface $order
++   *   The order.
++   * @param \Drupal\commerce_order\Entity\OrderItemInterface $order_item
++   *   The order item.
++   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
++   *   The current user.
++   */
++  public function __construct(OrderInterface $order, OrderItemInterface $order_item, AccountProxyInterface $current_user) {
++    $this->order = $order;
++    $this->order_item = $order_item;
++    $this->current_user = $current_user;
++  }
++
++  /**
++   * Gets the order.
++   *
++   * @return \Drupal\commerce_order\Entity\OrderInterface
++   *   The order.
++   */
++  public function getOrder() {
++    return $this->order;
++  }
++
++  /**
++   * Gets the order item.
++   *
++   * @return \Drupal\commerce_order\Entity\OrderItemInterface
++   *   The order item.
++   */
++  public function getOrderItem() {
++    return $this->order_item;
++  }
++
++  /**
++   * Gets the current user.
++   *
++   * @return \Drupal\Core\Session\AccountProxyInterface
++   *   The current user.
++   */
++  public function getCurrentUser() {
++    return $this->current_user;
++  }
++
++}
+diff --git a/modules/order/src/Plugin/Field/FieldFormatter/PriceCalculatedFormatter.php b/modules/order/src/Plugin/Field/FieldFormatter/PriceCalculatedFormatter.php
+new file mode 100644
+index 00000000..88bb4205
+--- /dev/null
++++ b/modules/order/src/Plugin/Field/FieldFormatter/PriceCalculatedFormatter.php
+@@ -0,0 +1,198 @@
++<?php
++
++namespace Drupal\commerce_order\Plugin\Field\FieldFormatter;
++
++use Drupal\commerce\PurchasableEntityInterface;
++use Drupal\commerce_order\AdjustmentTypeManager;
++use Drupal\commerce_order\Entity\OrderItemInterface;
++use Drupal\commerce_order\PurchasableEntityPriceCalculatorInterface;
++use Drupal\commerce_price\NumberFormatterFactoryInterface;
++use Drupal\commerce_price\Plugin\Field\FieldFormatter\PriceDefaultFormatter;
++use Drupal\Core\Cache\Cache;
++use Drupal\Core\Entity\EntityTypeManagerInterface;
++use Drupal\Core\Field\FieldDefinitionInterface;
++use Drupal\Core\Field\FieldItemListInterface;
++use Drupal\Core\Form\FormStateInterface;
++use Drupal\Core\Language\LanguageInterface;
++use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
++use Symfony\Component\DependencyInjection\ContainerInterface;
++
++/**
++ * Alternative plugin implementation for the 'commerce_price_calculated' formatter.
++ *
++ * @see \Drupal\commerce_price\Plugin\Field\FieldFormatter\PriceCalculatedFormatter
++ */
++class PriceCalculatedFormatter extends PriceDefaultFormatter implements ContainerFactoryPluginInterface {
++
++  /**
++   * The price calculator.
++   *
++   * @var \Drupal\commerce_order\PurchasableEntityPriceCalculatorInterface
++   */
++  protected $priceCalculator;
++
++  /**
++   * The currency storage.
++   *
++   * @var \Drupal\Core\Entity\EntityStorageInterface
++   */
++  protected $currencyStorage;
++
++  /**
++   * The adjustment type manager.
++   *
++   * @var \Drupal\commerce_order\AdjustmentTypeManager
++   */
++  protected $adjustmentTypeManager;
++
++  /**
++   * Constructs a new PriceCalculatedFormatter object.
++   *
++   * @param string $plugin_id
++   *   The plugin_id for the formatter.
++   * @param mixed $plugin_definition
++   *   The plugin implementation definition.
++   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
++   *   The definition of the field to which the formatter is associated.
++   * @param array $settings
++   *   The formatter settings.
++   * @param string $label
++   *   The formatter label display setting.
++   * @param string $view_mode
++   *   The view mode.
++   * @param array $third_party_settings
++   *   Any third party settings settings.
++   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
++   *   The entity type manager.
++   * @param \Drupal\commerce_price\NumberFormatterFactoryInterface $number_formatter_factory
++   *   The number formatter factory.
++   * @param \Drupal\commerce_order\PurchasableEntityPriceCalculatorInterface $price_calculator
++   *   The price calculator.
++   * @param \Drupal\commerce_order\AdjustmentTypeManager $adjustment_type_manager
++   *   The adjustment type manager.
++   */
++  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityTypeManagerInterface $entity_type_manager, NumberFormatterFactoryInterface $number_formatter_factory, PurchasableEntityPriceCalculatorInterface $price_calculator, AdjustmentTypeManager $adjustment_type_manager) {
++    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $entity_type_manager, $number_formatter_factory);
++
++    $this->priceCalculator = $price_calculator;
++    $this->currencyStorage = $entity_type_manager->getStorage('commerce_currency');
++    $this->adjustmentTypeManager = $adjustment_type_manager;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
++    return new static(
++      $plugin_id,
++      $plugin_definition,
++      $configuration['field_definition'],
++      $configuration['settings'],
++      $configuration['label'],
++      $configuration['view_mode'],
++      $configuration['third_party_settings'],
++      $container->get('entity_type.manager'),
++      $container->get('commerce_price.number_formatter_factory'),
++      $container->get('commerce_order.purchasable_entity_price_calculator'),
++      $container->get('plugin.manager.commerce_adjustment_type')
++    );
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function defaultSettings() {
++    return [
++      'adjustment_types' => [],
++    ] + parent::defaultSettings();
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function settingsForm(array $form, FormStateInterface $form_state) {
++    $elements = parent::settingsForm($form, $form_state);
++
++    $elements['adjustment_types'] = [
++      '#type' => 'checkboxes',
++      '#title' => $this->t('Adjustment types'),
++      '#options' => [],
++      '#default_value' => $this->getSetting('adjustment_types'),
++    ];
++
++    foreach ($this->adjustmentTypeManager->getDefinitions() as $plugin_id => $definition) {
++      $elements['adjustment_types']['#options'][$plugin_id] = $definition['label'];
++    }
++
++    return $elements;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function settingsSummary() {
++    $summary = parent::settingsSummary();
++
++    $adjustment_types = array_filter($this->getSetting('adjustment_types'));
++    if (empty($adjustment_types)) {
++      $summary[] = $this->t('No included adjustment types');
++    }
++    else {
++      $adjustment_type_labels = [];
++      foreach ($adjustment_types as $adjustment_type) {
++        $definition = $this->adjustmentTypeManager->getDefinition($adjustment_type);
++        $adjustment_type_labels[] = $definition['label'];
++      }
++      $summary[] = $this->t('Included adjustment types: @types', ['@types' => implode(', ', $adjustment_type_labels)]);
++    }
++
++    return $summary;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function viewElements(FieldItemListInterface $items, $langcode) {
++    $elements = [];
++    /** @var \Drupal\commerce_price\Plugin\Field\FieldType\PriceItem $item */
++    foreach ($items as $delta => $item) {
++      /** @var \Drupal\commerce\PurchasableEntityInterface $purchasable_entity */
++      $purchasable_entity = $items->getEntity();
++      if ($purchasable_entity instanceOf OrderItemInterface) {
++        $purchasable_entity = $purchasable_entity->getPurchasedEntity();
++      }
++      $calculated_price = $this->priceCalculator->calculate($purchasable_entity, 1, $this->getSetting('adjustment_types'));
++      $number = $calculated_price['calculated_price']->getNumber();
++      $base_number = $calculated_price['base_price']->getNumber();
++      /** @var \Drupal\commerce_price\Entity\CurrencyInterface $currency */
++      $currency = $this->currencyStorage->load($calculated_price['calculated_price']->getCurrencyCode());
++      $this->numberFormatter->setMinimumFractionDigits($currency->getFractionDigits());
++      $this->numberFormatter->setMaximumFractionDigits($currency->getFractionDigits());
++
++      $elements[$delta] = [
++        '#theme' => 'commerce_price_calculated',
++        '#calculated_price' => $this->numberFormatter->formatCurrency($number, $currency),
++        '#base_price' => $this->numberFormatter->formatCurrency($base_number, $currency),
++        '#adjustments' => $calculated_price['adjustments'],
++        '#cache' => [
++          'tags' => $purchasable_entity->getCacheTags(),
++          'contexts' => Cache::mergeContexts($purchasable_entity->getCacheContexts(), [
++            'languages:' . LanguageInterface::TYPE_INTERFACE,
++            'country',
++          ]),
++        ],
++      ];
++    }
++
++    return $elements;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function isApplicable(FieldDefinitionInterface $field_definition) {
++    $entity_type = \Drupal::entityTypeManager()->getDefinition($field_definition->getTargetEntityTypeId());
++    return $entity_type->entityClassImplements(PurchasableEntityInterface::class) || $entity_type->entityClassImplements(OrderItemInterface::class);
++  }
++
++}
+diff --git a/modules/order/src/PurchasableEntityPriceCalculator.php b/modules/order/src/PurchasableEntityPriceCalculator.php
+new file mode 100644
+index 00000000..4ab04ed4
+--- /dev/null
++++ b/modules/order/src/PurchasableEntityPriceCalculator.php
+@@ -0,0 +1,185 @@
++<?php
++
++namespace Drupal\commerce_order;
++
++use Drupal\commerce\Context;
++use Drupal\commerce\PurchasableEntityInterface;
++use Drupal\commerce_order\Event\OrderEvents;
++use Drupal\commerce_order\Event\OrderPriceCalculatorEvent;
++use Drupal\commerce_order\Resolver\OrderTypeResolverInterface;
++use Drupal\commerce_price\Resolver\ChainPriceResolverInterface;
++use Drupal\commerce_store\CurrentStoreInterface;
++use Drupal\Core\Entity\EntityTypeManagerInterface;
++use Drupal\Core\Session\AccountProxyInterface;
++use Symfony\Component\EventDispatcher\EventDispatcherInterface;
++use Symfony\Component\HttpFoundation\RequestStack;
++
++class PurchasableEntityPriceCalculator implements PurchasableEntityPriceCalculatorInterface {
++
++  /**
++   * The request stack.
++   *
++   * @var \Symfony\Component\HttpFoundation\RequestStack
++   */
++  protected $requestStack;
++
++  /**
++   * The current store.
++   *
++   * @var \Drupal\commerce_store\CurrentStoreInterface
++   */
++  protected $currentStore;
++
++  /**
++   * The current user.
++   *
++   * @var \Drupal\Core\Session\AccountProxyInterface
++   */
++  protected $currentUser;
++
++  /**
++   * The order type resolver.
++   *
++   * @var \Drupal\commerce_order\Resolver\OrderTypeResolverInterface
++   */
++  protected $orderTypeResolver;
++
++  /**
++   * The chain base price resolver.
++   *
++   * @var \Drupal\commerce_price\Resolver\ChainPriceResolverInterface
++   */
++  protected $chainPriceResolver;
++
++  /**
++   * The order item storage.
++   *
++   * @var \Drupal\commerce_order\OrderItemStorageInterface
++   */
++  protected $orderItemStorage;
++
++  /**
++   * The order storage.
++   *
++   * @var \Drupal\Core\Entity\EntityStorageInterface
++   */
++  protected $orderStorage;
++
++  /**
++   * The order processors.
++   *
++   * @var \Drupal\commerce_order\OrderProcessorInterface[]
++   */
++  protected $processors = [];
++
++  /**
++   * The event dispatcher.
++   *
++   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
++   */
++  protected $eventDispatcher;
++
++  /**
++   * Constructs a new PurchasableEntityPriceCalculator object.
++   *
++   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
++   *   The entity type manager.
++   * @param \Drupal\commerce_store\CurrentStoreInterface $current_store
++   *   The current store.
++   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
++   *   The current user.
++   * @param \Drupal\commerce_order\Resolver\OrderTypeResolverInterface $order_type_resolver
++   *   The order type resolver.
++   * @param \Drupal\commerce_price\Resolver\ChainPriceResolverInterface $chain_price_resolver
++   *   The chain price resolver.
++   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
++   *   The request stack.
++   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
++   *   The event dispatcher.
++   */
++  public function __construct(EntityTypeManagerInterface $entity_type_manager, CurrentStoreInterface $current_store, AccountProxyInterface $current_user, OrderTypeResolverInterface $order_type_resolver, ChainPriceResolverInterface $chain_price_resolver, RequestStack $request_stack, EventDispatcherInterface $event_dispatcher) {
++    $this->currentStore = $current_store;
++    $this->currentUser = $current_user;
++    $this->orderTypeResolver = $order_type_resolver;
++    $this->chainPriceResolver = $chain_price_resolver;
++    $this->orderItemStorage = $entity_type_manager->getStorage('commerce_order_item');
++    $this->orderStorage = $entity_type_manager->getStorage('commerce_order');
++    $this->requestStack = $request_stack;
++    $this->eventDispatcher = $event_dispatcher;
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function addProcessor(OrderProcessorInterface $processor, $adjustment_type = NULL) {
++    if (!empty($adjustment_type)) {
++      $this->processors[] = [
++        'processor' => $processor,
++        'adjustment_type' => $adjustment_type,
++      ];
++    }
++  }
++
++  /**
++   * {@inheritdoc}
++   */
++  public function calculate(PurchasableEntityInterface $purchasable_entity, $quantity, array $adjustment_types = []) {
++    $adjustment_types = array_filter($adjustment_types);
++
++    $store = $this->currentStore->getStore();
++    $context = new Context($this->currentUser, $store);
++
++    $resolved_price = $this->chainPriceResolver->resolve($purchasable_entity, $quantity, $context);
++    $resolved_price_data = [
++      'base_price' => $resolved_price,
++      'calculated_price' => $resolved_price,
++      'adjustments' => [],
++    ];
++
++    // We do not need adjustments to be calculated, return the resolved price data.
++    if (empty($adjustment_types)) {
++      return $resolved_price_data;
++    }
++
++    // Filter adjustment provider order processors by adjustment types.
++    $processors = array_filter($this->processors, function ($processor) use ($adjustment_types) {
++      return in_array($processor['adjustment_type'], $adjustment_types);
++    });
++
++    // No order processors apply, return the resolved price data.
++    if (empty($processors)) {
++      return $resolved_price_data;
++    }
++
++    $order_item = $this->orderItemStorage->createFromPurchasableEntity($purchasable_entity);
++    $order_item->setUnitPrice($resolved_price);
++    $order_item->setQuantity($quantity);
++
++    $order_type_id = $this->orderTypeResolver->resolve($order_item);
++    /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
++    $order = $this->orderStorage->create([
++      'type' => $order_type_id,
++      'store_id' => $store->id(),
++      'uid' => $this->currentUser->id(),
++      'mail' => $this->currentUser->getEmail(),
++      'ip_address' => $this->requestStack->getCurrentRequest()->getClientIp(),
++    ]);
++
++    $order->addItem($order_item);
++    $order_item->order_id = $order;
++
++    $event = new OrderPriceCalculatorEvent($order, $order_item, $this->currentUser);
++    $this->eventDispatcher->dispatch(OrderEvents::ORDER_PRICE_CALCULATOR, $event);
++
++    foreach ($processors as $processor) {
++      $processor['processor']->process($order);
++    }
++
++    return [
++      'base_price' => $resolved_price,
++      'calculated_price' => $order_item->getAdjustedUnitPrice(),
++      'adjustments' => $order_item->getAdjustments(),
++    ];
++  }
++
++}
+diff --git a/modules/order/src/PurchasableEntityPriceCalculatorInterface.php b/modules/order/src/PurchasableEntityPriceCalculatorInterface.php
+new file mode 100644
+index 00000000..cdb6e1df
+--- /dev/null
++++ b/modules/order/src/PurchasableEntityPriceCalculatorInterface.php
+@@ -0,0 +1,27 @@
++<?php
++
++namespace Drupal\commerce_order;
++
++use Drupal\commerce\PurchasableEntityInterface;
++
++interface PurchasableEntityPriceCalculatorInterface {
++
++  /**
++   * Calculates a purchasable entity's price.
++   *
++   * @param \Drupal\commerce\PurchasableEntityInterface $purchasable_entity
++   *   The purchasable entity.
++   * @param int $quantity
++   *   The quantity.
++   * @param array $adjustment_types
++   *   The adjustment types to calculate.
++   *
++   * @return array
++   *   An array with the following elements:
++   *     - base_price: The resolved price.
++   *     - calculated_price: The adjusted unit price.
++   *     - adjustments: An array of the order item adjustments.
++   */
++  public function calculate(PurchasableEntityInterface $purchasable_entity, $quantity, array $adjustment_types = []);
++
++}
+diff --git a/modules/order/templates/commerce-price-calculated.html.twig b/modules/order/templates/commerce-price-calculated.html.twig
+new file mode 100644
+index 00000000..f1af81e3
+--- /dev/null
++++ b/modules/order/templates/commerce-price-calculated.html.twig
+@@ -0,0 +1,15 @@
++{#
++/**
++ * @file
++ * Default commerce price calculated template.
++ *
++ * Available variables:
++ * - base_price: The base price.
++ * - calculated_price: The calculated price.
++ * - adjustments: An array of adjustments.
++ *
++ * @ingroup themeable
++ */
++#}
++
++{{- calculated_price -}}
+diff --git a/modules/order/tests/modules/commerce_order_test/commerce_order_test.services.yml b/modules/order/tests/modules/commerce_order_test/commerce_order_test.services.yml
+index eebeb014..44aca4d6 100644
+--- a/modules/order/tests/modules/commerce_order_test/commerce_order_test.services.yml
++++ b/modules/order/tests/modules/commerce_order_test/commerce_order_test.services.yml
+@@ -2,4 +2,9 @@ services:
+   commerce_order_test.test_adjustment_processor:
+     class: Drupal\commerce_order_test\TestAdjustmentProcessor
+     tags:
+-      - { name: commerce_order.order_processor, priority: 500 }
++      - { name: commerce_order.order_processor, priority: 500, adjustment_type: 'test_adjustment_type' }
++
++  commerce_order_test.order_price_calculator_subscriber:
++    class: Drupal\commerce_order_test\EventSubscriber\TestPriceCalculatorEventSubscriber
++    tags:
++      - { name: event_subscriber }
+diff --git a/modules/order/tests/modules/commerce_order_test/src/EventSubscriber/TestPriceCalculatorEventSubscriber.php b/modules/order/tests/modules/commerce_order_test/src/EventSubscriber/TestPriceCalculatorEventSubscriber.php
+new file mode 100644
+index 00000000..7244c0ce
+--- /dev/null
++++ b/modules/order/tests/modules/commerce_order_test/src/EventSubscriber/TestPriceCalculatorEventSubscriber.php
+@@ -0,0 +1,37 @@
++<?php
++
++namespace Drupal\commerce_order_test\EventSubscriber;
++
++use Drupal\commerce_order\Event\OrderPriceCalculatorEvent;
++use Symfony\Component\EventDispatcher\EventSubscriberInterface;
++
++class TestPriceCalculatorEventSubscriber implements EventSubscriberInterface {
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function getSubscribedEvents() {
++    $events = [
++      'commerce_order.order_price_calculator' => ['onTestPriceCalculator', -100],
++    ];
++    return $events;
++  }
++
++  /**
++   * Sets a data value for the order if the order item sku is XYZ123.
++   *
++   * @param \Drupal\commerce_order\Event\OrderPriceCalculatorEvent $event
++   *   The order price calculator event.
++   */
++  public function onTestPriceCalculator(OrderPriceCalculatorEvent $event) {
++    /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
++    $order = $event->getOrder();
++    /** @var \Drupal\commerce_order\Entity\OrderItemInterface $order_item */
++    $order_item = $event->getOrderItem();
++
++    if ($order_item->getPurchasedEntity()->getSku() == 'XYZ123') {
++      $order->setData('fee', TRUE);
++    }
++  }
++
++}
+diff --git a/modules/order/tests/modules/commerce_order_test/src/TestAdjustmentProcessor.php b/modules/order/tests/modules/commerce_order_test/src/TestAdjustmentProcessor.php
+index 4d0f83f5..3a71279c 100644
+--- a/modules/order/tests/modules/commerce_order_test/src/TestAdjustmentProcessor.php
++++ b/modules/order/tests/modules/commerce_order_test/src/TestAdjustmentProcessor.php
+@@ -2,8 +2,11 @@
+
+ namespace Drupal\commerce_order_test;
+
++use Drupal\commerce_order\Adjustment;
+ use Drupal\commerce_order\Entity\OrderInterface;
+ use Drupal\commerce_order\OrderProcessorInterface;
++use Drupal\commerce_price\Price;
++use Drupal\commerce_product\Entity\ProductVariationInterface;
+
+ /**
+  * Adds order and order item adjustments for testing purposes.
+@@ -14,11 +17,36 @@ class TestAdjustmentProcessor implements OrderProcessorInterface {
+    * {@inheritdoc}
+    */
+   public function process(OrderInterface $order) {
++
++    // Get data set in TestPriceCalculatorEventSubscriber.
++    $test_fee = $order->getData('fee', FALSE);
++
+     foreach ($order->getItems() as $order_item) {
+       $test_adjustments = $order_item->getData('test_adjustments', []);
+       foreach ($test_adjustments as $test_adjustment) {
+         $order_item->addAdjustment($test_adjustment);
+       }
++
++      // Add adjustment for PurchasableEntityPriceCalculatorTest.
++      $purchased_entity = $order_item->getPurchasedEntity();
++      if ($purchased_entity instanceof ProductVariationInterface) {
++        if ($purchased_entity->getSku() == 'TEST_CALCULATED_PRICE') {
++          $order_item->addAdjustment(new Adjustment([
++            'type' => 'test_adjustment_type',
++            'label' => '$2.00 item fee',
++            'amount' => new Price('2.00', 'USD'),
++          ]));
++        }
++      }
++
++      // Add adjustment for PurchasableEntityPriceCalculatorTest.
++      if ($test_fee) {
++        $order_item->addAdjustment(new Adjustment([
++          'type' => 'test_adjustment_type',
++          'label' => '$10.00 item fee',
++          'amount' => new Price('10.00', 'USD'),
++        ]));
++      }
+     }
+
+     $test_adjustments = $order->getData('test_adjustments', []);
+diff --git a/modules/order/tests/src/Kernel/PurchasableEntityPriceCalculatorTest.php b/modules/order/tests/src/Kernel/PurchasableEntityPriceCalculatorTest.php
+new file mode 100644
+index 00000000..93e4a885
+--- /dev/null
++++ b/modules/order/tests/src/Kernel/PurchasableEntityPriceCalculatorTest.php
+@@ -0,0 +1,254 @@
++<?php
++
++namespace Drupal\Tests\commerce_order\Kernel;
++
++use Drupal\commerce_price\Price;
++use Drupal\commerce_product\Entity\Product;
++use Drupal\commerce_product\Entity\ProductVariation;
++use Drupal\commerce_promotion\Entity\Promotion;
++use Drupal\commerce_tax\Entity\TaxType;
++use Drupal\Core\Session\AnonymousUserSession;
++use Drupal\Tests\commerce\Kernel\CommerceKernelTestBase;
++
++/**
++ * Tests the purchasable entity price calculator.
++ *
++ * @group commerce
++ */
++class PurchasableEntityPriceCalculatorTest extends CommerceKernelTestBase {
++
++  /**
++   * The test variation.
++   *
++   * @var \Drupal\commerce_product\Entity\ProductVariationInterface
++   */
++  protected $variation;
++
++  /**
++   * The test variation_fee.
++   *
++   * @var \Drupal\commerce_product\Entity\ProductVariationInterface
++   */
++  protected $variation_fee;
++
++  /**
++   * The price calculator.
++   *
++   * @var \Drupal\commerce_order\PurchasableEntityPriceCalculatorInterface
++   */
++  protected $priceCalculator;
++
++  /**
++   * Modules to enable.
++   *
++   * @var array
++   */
++  public static $modules = [
++    'entity_reference_revisions',
++    'path',
++    'profile',
++    'state_machine',
++    'commerce_product',
++    'commerce_promotion',
++    'commerce_tax',
++    'commerce_order',
++    'commerce_order_test',
++  ];
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function setUp() {
++    parent::setUp();
++
++    $this->installEntitySchema('profile');
++    $this->installEntitySchema('commerce_order');
++    $this->installEntitySchema('commerce_order_item');
++    $this->installEntitySchema('commerce_product');
++    $this->installEntitySchema('commerce_product_variation');
++    $this->installEntitySchema('commerce_promotion');
++    $this->installConfig(['commerce_product', 'commerce_order']);
++
++    // Create a plugin to ensure a promotion adjustment is returned.
++    $promotion = Promotion::create([
++      'name' => 'Promotion 1',
++      'order_types' => ['default'],
++      'stores' => [$this->store->id()],
++      'status' => TRUE,
++      'offer' => [
++        'target_plugin_id' => 'order_item_percentage_off',
++        'target_plugin_configuration' => [
++          'percentage' => '0.50',
++        ],
++      ],
++    ]);
++    $promotion->save();
++
++    // Create a custom tax plugin (ensures mocked order integrity.)
++    // The default store is US-WI, so imagine that the US has VAT.
++    TaxType::create([
++      'id' => 'us_vat',
++      'label' => 'US VAT',
++      'plugin' => 'custom',
++      'configuration' => [
++        'display_inclusive' => TRUE,
++        'rates' => [
++          [
++            'id' => 'standard',
++            'label' => 'Standard',
++            'percentage' => '0.2',
++          ],
++        ],
++        'territories' => [
++          ['country_code' => 'US', 'administrative_area' => 'WI'],
++          ['country_code' => 'US', 'administrative_area' => 'SC'],
++        ],
++      ],
++    ])->save();
++
++    $product = Product::create([
++      'type' => 'default',
++      'title' => 'Default testing product',
++      'stores' => [$this->store->id()],
++    ]);
++    $product->save();
++
++    $variation = ProductVariation::create([
++      'type' => 'default',
++      'sku' => 'TEST_CALCULATED_PRICE',
++      'status' => 1,
++      'price' => new Price('12.00', 'USD'),
++    ]);
++    $variation->save();
++    $product->addVariation($variation)->save();
++    $this->variation = $this->reloadEntity($variation);
++
++    $variation_fee = ProductVariation::create([
++      'type' => 'default',
++      'sku' => 'XYZ123',
++      'status' => 1,
++      'price' => new Price('12.00', 'USD'),
++    ]);
++    $variation_fee->save();
++    $product->addVariation($variation_fee)->save();
++    $this->variation_fee = $this->reloadEntity($variation_fee);
++
++    $this->container->get('current_user')->setAccount(new AnonymousUserSession());
++    $this->priceCalculator = $this->container->get('commerce_order.purchasable_entity_price_calculator');
++  }
++
++  /**
++   * Tests the purchased entity calculator.
++   */
++  public function testCalculation() {
++    $calculated = $this->priceCalculator->calculate($this->variation, 1);
++    $this->assertEquals(new Price('12.00', 'USD'), $calculated['base_price']);
++    $this->assertEquals(new Price('12.00', 'USD'), $calculated['calculated_price']);
++
++    $calculated = $this->priceCalculator->calculate($this->variation, 1, ['promotion']);
++    $this->assertEquals(new Price('12.00', 'USD'), $calculated['base_price']);
++    $this->assertEquals(new Price('6.00', 'USD'), $calculated['calculated_price']);
++
++    $calculated = $this->priceCalculator->calculate($this->variation, 1, ['fee']);
++    $this->assertEquals(new Price('12.00', 'USD'), $calculated['base_price']);
++    $this->assertEquals(new Price('12.00', 'USD'), $calculated['calculated_price']);
++
++    $calculated = $this->priceCalculator->calculate($this->variation, 1, ['test_adjustment_type']);
++    $this->assertEquals(new Price('12.00', 'USD'), $calculated['base_price']);
++    $this->assertEquals(new Price('14.00', 'USD'), $calculated['calculated_price']);
++
++    $calculated = $this->priceCalculator->calculate($this->variation, 1, ['promotion', 'test_adjustment_type']);
++    $this->assertEquals(new Price('12.00', 'USD'), $calculated['base_price']);
++    $this->assertEquals(new Price('8.00', 'USD'), $calculated['calculated_price']);
++
++    // Tests the Price Calculator EventSubscriber.
++    $calculated = $this->priceCalculator->calculate($this->variation_fee, 1);
++    $this->assertEquals(new Price('12.00', 'USD'), $calculated['base_price']);
++    $this->assertEquals(new Price('12.00', 'USD'), $calculated['calculated_price']);
++
++    $calculated = $this->priceCalculator->calculate($this->variation_fee, 1, ['test_adjustment_type']);
++    $this->assertEquals(new Price('12.00', 'USD'), $calculated['base_price']);
++    $this->assertEquals(new Price('22.00', 'USD'), $calculated['calculated_price']);
++  }
++
++  /**
++   * Tests output of the calculated price formatters.
++   */
++  public function testCalculatedPriceOutput() {
++    $variation_display = commerce_get_entity_display('commerce_product_variation', 'default', 'view');
++
++    // Calculated price without adjustments.
++    $variation_display->setComponent('price', [
++      'label' => 'above',
++      'type' => 'commerce_price_calculated',
++      'settings' => [],
++    ]);
++    $variation_display->save();
++
++    $this->renderVariation();
++    $this->assertEscaped('$12.00');
++
++    // Calculated price with adjustments.
++    $variation_display->setComponent('price', [
++      'label' => 'above',
++      'type' => 'commerce_price_calculated',
++      'settings' => [],
++    ]);
++    $variation_display->save();
++
++    $this->renderVariation();
++    $this->assertEscaped('$12.00');
++
++    // Calculated price with adjustments.
++    $variation_display->setComponent('price', [
++      'label' => 'above',
++      'type' => 'commerce_price_calculated',
++      'settings' => [
++        'adjustment_types' => [
++          'promotion',
++        ],
++      ],
++    ]);
++    $variation_display->save();
++    $this->renderVariation();
++    $this->assertEscaped('$6.00');
++
++    // Calculated price with adjustments.
++    $variation_display->setComponent('price', [
++      'label' => 'above',
++      'type' => 'commerce_price_calculated',
++      'settings' => [
++        'adjustment_types' => [
++          'test_adjustment_type',
++        ],
++      ],
++    ]);
++    $variation_display->save();
++    $this->renderVariation();
++    $this->assertEscaped('$14.00');
++
++    // Calculated price with adjustments.
++    $variation_display->setComponent('price', [
++      'label' => 'above',
++      'type' => 'commerce_price_calculated',
++      'settings' => [
++        'adjustment_types' => [
++          'test_adjustment_type', 'promotion',
++        ],
++      ],
++    ]);
++    $variation_display->save();
++    $this->renderVariation();
++    $this->assertEscaped('$8.00');
++  }
++
++  /**
++   * Renders the test variation.
++   */
++  protected function renderVariation() {
++    $variation_view_builder = $this->container->get('entity_type.manager')->getViewBuilder('commerce_product_variation');
++    $variation_build = $variation_view_builder->view($this->variation);
++    $this->render($variation_build);
++  }
++
++}
+diff --git a/modules/price/config/schema/commerce_price.schema.yml b/modules/price/config/schema/commerce_price.schema.yml
+index 9c812638..901394d7 100644
+--- a/modules/price/config/schema/commerce_price.schema.yml
++++ b/modules/price/config/schema/commerce_price.schema.yml
+@@ -61,3 +61,10 @@ field.formatter.settings.commerce_price_calculated:
+     display_currency_code:
+       type: boolean
+       label: 'Display the currency code instead of the currency symbol'
++    # Adjustment types used by commerce_order version of formatter.
++    adjustment_types:
++      type: sequence
++      label: 'Adjustment types'
++      sequence:
++        type: string
++        label: 'Adjustment type'
+diff --git a/modules/promotion/commerce_promotion.services.yml b/modules/promotion/commerce_promotion.services.yml
+index 565cdf54..a812aa7a 100644
+--- a/modules/promotion/commerce_promotion.services.yml
++++ b/modules/promotion/commerce_promotion.services.yml
+@@ -7,7 +7,7 @@ services:
+     class: Drupal\commerce_promotion\PromotionOrderProcessor
+     arguments: ['@entity_type.manager']
+     tags:
+-      - { name: commerce_order.order_processor, priority: 50 }
++      - { name: commerce_order.order_processor, priority: 50, adjustment_type: 'promotion' }
+
+   commerce_promotion.usage:
+     class: Drupal\commerce_promotion\PromotionUsage
+diff --git a/modules/tax/commerce_tax.services.yml b/modules/tax/commerce_tax.services.yml
+index dc38e839..f5127d90 100644
+--- a/modules/tax/commerce_tax.services.yml
++++ b/modules/tax/commerce_tax.services.yml
+@@ -17,4 +17,4 @@ services:
+     class: Drupal\commerce_tax\TaxOrderProcessor
+     arguments: ['@entity_type.manager']
+     tags:
+-      - { name: commerce_order.order_processor, priority: 100 }
++      - { name: commerce_order.order_processor, priority: 100, adjustment_type: 'tax' }

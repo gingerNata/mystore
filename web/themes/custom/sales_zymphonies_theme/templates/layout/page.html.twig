@@ -226,6 +226,18 @@
 {% endif %}
 <!-- End: Top Widgets -->
 
+<!-- Start: Above content -->
+{% if is_front and page.abovecontent %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {{ page.abovecontent }}
+      </div>
+    </div>
+  </div>
+{% endif %}
+<!--End: Above content -->
+
 
 <!-- Start: Page title -->
 {%  if page.page_title and not is_front %}

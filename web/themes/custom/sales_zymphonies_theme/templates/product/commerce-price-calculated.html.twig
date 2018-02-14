@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Default commerce price calculated template.
+ *
+ * Available variables:
+ * - base_price: The base price.
+ * - calculated_price: The calculated price.
+ * - adjustments: An array of adjustments.
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% if  base_price != calculated_price %}
+<span class="base-price">
+  <strike>{{- base_price -}}</strike>
+</span>
+{% endif %}
+<span class="calculated-price"> {{- calculated_price -}}</span>

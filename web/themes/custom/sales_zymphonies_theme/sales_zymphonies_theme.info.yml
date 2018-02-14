@@ -33,7 +33,9 @@ regions:
   homepagemessage: 'Home page message'
   topwidget_first: 'Top first widget'
   topwidget_second: 'Top second widget'
-  topwidget_third: 'Top third widget' 
+  topwidget_third: 'Top third widget'
+  abovecontent: 'Above content'
+
 
   #Global region
   highlighted: 'Highlighted' 

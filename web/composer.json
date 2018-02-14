@@ -5,6 +5,7 @@
         "cweagans/composer-patches": "^1.6.0",
         "drupal/admin_toolbar": "^1.20",
         "drupal/allowed_formats": "^1.1",
+        "drupal/block_visibility_groups": "^1.1",
         "drupal/commerce": "^2.0",
         "drupal/commerce_variation_cart_form": "^1.0",
         "drupal/commerce_wishlist": "^3.0@alpha",
@@ -20,14 +21,19 @@
         "drupal/likebtn": "^2.13",
         "drupal/panelizer": "^4.0",
         "drupal/panels": "^4.2",
+        "drupal/paragraphs": "^1.2",
         "drupal/pathauto": "^1.0",
+        "drupal/registration_link": "^1.0",
         "drupal/search_api": "^1.5",
+        "drupal/search_api_autocomplete": "^1.0@RC",
         "drupal/search_api_solr": "^1.2",
         "drupal/search_api_solr_multilingual": "^1.1",
         "drupal/simplenews": "^1.0@alpha",
         "drupal/starrating": "^4.0@alpha",
         "drupal/swiftmailer": "1.x-dev",
+        "drupal/term_reference_tree": "1.x-dev",
         "drupal/token": "^1.0",
+        "drupal/tvi": "^1.0@beta",
         "drupal/votingapi": "^3.0",
         "drupal/votingapi_widgets": "^1.0@alpha",
         "drush/drush": "~8.0|^9.0.0-beta8",
@@ -69,6 +75,13 @@
         "patches": {
             "drupal/commerce_wishlist": {
                 "Drupal commerce wishlist fix": "patches/move_to_cart.patch"
+            },
+            "drupal/commerce": {
+                "Drupal commerce calculated price fix": "patches/2805549-78.patch",
+                "Drupal commerce+address unlock field": "patches/unlock_address_field--2767809-3.patch"
+            },
+            "drupal/term_reference_tree": {
+                "Drupal term reference tree widget": "patches/term_reference_tree-widget_config-2837672-17-8.x.patch"
             }
         }
     },
