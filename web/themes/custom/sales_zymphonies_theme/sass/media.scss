@@ -21,11 +21,6 @@
     }
 
   }
-
-  .top-menu{
-    padding: 0;
-    text-align: left;
-  }
   
   .testimonials-wrap{
     padding: 75px 0 55px;
@@ -55,9 +50,9 @@
 
   .region-primary-menu{
     display: inline-block !important;
-    float: right;
     width: auto;
     margin: 0;
+    font-size: 20px;
 
     ul{
       border: 0;
@@ -77,6 +72,7 @@
 
     li{
       border: 0;
+      display: inline-block;
 
       a{
         background: none;

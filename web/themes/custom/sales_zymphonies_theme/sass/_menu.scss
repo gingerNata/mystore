@@ -29,20 +29,47 @@ nav h2{
   display: none;
 }
 
+
 .menu-base-theme{
-	background: none;	
+	background: none;
 
 	li{
 
-		a{
-			color: $menuTextColor;
-			background: #FBFBFB;
-			border-bottom: 1px solid #EEF0F7;
-			line-height: 100%;
-			padding: 15px 20px;
+		margin: 0 20px;
+		border: none;
+		width: 70px;
 
-			&:hover, 
-			&:focus, 
+        &:first-child {
+
+            a {
+                background: url("../images/home.png") no-repeat;
+                background-size: contain;
+
+                &.is-active {
+                    background: url("../images/home-filled.png") no-repeat;
+                    background-size: contain;
+                }
+                &:hover {
+                    background: url("../images/home-filled.png") no-repeat;
+                    background-size: contain;
+                }
+            }
+        }
+
+		a{
+
+			color: $menuTextColor;
+			height: $iconHeight;
+			max-width: 65px;
+			line-height: $iconHeight;
+			padding: 0 0 0 $iconHeight;
+
+			&:hover {
+				line-height: $iconHeight;
+				padding: 0 0 0 $iconHeight;
+                color: $menuTextActiveColor;
+			}
+			&:focus,
 			&:active, 
 			&.highlighted{
 				background: none;
@@ -64,6 +91,40 @@ nav h2{
 				line-height: 100%;
 				font-size: 2em;
 			}
+
+
+
+            &.contacts {
+
+                background: url("../images/phone.png") no-repeat;
+                background-size: contain;
+                height: $iconHeight;
+                width: $iconWidth;
+                display: block;
+
+                &.is-active {
+                    background: url("../images/phone-filled.png") no-repeat;
+                    background-size: contain;
+                }
+                &:hover {
+                    background: url("../images/phone-filled.png") no-repeat;
+                    background-size: contain;
+                }
+            }
+
+            &.arrows {
+                background: url("../images/arrow.png") no-repeat;
+                background-size: contain;
+
+                &.is-active {
+                    background: url("../images/arrow--filled.png") no-repeat;
+                    background-size: contain;
+                }
+                &:hover {
+                    background: url("../images/arrow--filled.png") no-repeat;
+                    background-size: contain;
+                }
+            }
 		} 
 	}
 }
@@ -96,33 +157,6 @@ nav h2{
 		a{
 			display: block;
 			padding: 2px 15px 2px 0;
-		}
-	}
-}
-
-
-/*Top Menu*/
-
-.top-menu{
-	padding: 10px 0;
-	text-align: center;
-	font-size: .75em;
-	background: #f9f9f9;
-}
-
-.region-top-menu{
-
-	ul{
-		text-align: center;
-		margin: 0;
-		padding: 0;
-	}
-	
-	nav li{
-		display: inline-block;
-		a{
-			display: block;
-			padding: 2px 5px;
 		}
 	}
 }
