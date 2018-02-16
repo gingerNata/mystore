@@ -6,7 +6,7 @@ http_images_path = "../images"
 http_path = "/"
 css_dir = "css"
 sass_dir = "sass"
-javascripts_dir = "javascripts"
+javascripts_dir = "js"
 line_comments = false
 output_style = :compact
 
