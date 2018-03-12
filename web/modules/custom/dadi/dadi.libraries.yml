@@ -4,3 +4,10 @@ wish-button:
     js/wish_button.js: {}
   dependencies:
     - core/jquery
+
+category_menu:
+  version: 1.x
+  js:
+    js/category-menu.js: {}
+  dependencies:
+    - core/jquery

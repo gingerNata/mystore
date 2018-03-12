@@ -29,6 +29,8 @@ jQuery(document).ready(function ($) {
         });
     }
 
+
+
 });
 (function ($) {
     Drupal.behaviors.main = {
@@ -44,6 +46,53 @@ jQuery(document).ready(function ($) {
                      $('.sub-menu').hide();
                  }, delay)
             });
+        }
+    }
+})(jQuery);
+(function ($) {
+    Drupal.behaviors.product_custom = {
+
+        attach: function (context, settings) {
+
+            if(!$('.path-product .form-item-quantity-0-value').hasClass('with-buttons')) {
+                jQuery('<div class="quantity-button quantity-down">-</div>')
+                    .insertBefore('.path-product .js-form-type-number input');
+                jQuery('<div class="quantity-button quantity-up">+</div>')
+                    .insertAfter('.path-product .js-form-type-number input');
+                $('.path-product .form-item-quantity-0-value').addClass('with-buttons');
+            }
+            jQuery('.js-form-type-number').each(function() {
+                var spinner = jQuery(this),
+                    input = spinner.find('input[type="number"]'),
+                    btnUp = spinner.find('.quantity-up'),
+                    btnDown = spinner.find('.quantity-down'),
+                    min = input.attr('min'),
+                    max = input.attr('max');
+
+                btnUp.click(function() {
+                    var oldValue = parseFloat(input.val());
+                    if (oldValue >= max) {
+                        var newVal = oldValue;
+                    } else {
+                        var newVal = oldValue + 1;
+                    }
+                    spinner.find("input").val(newVal);
+                    spinner.find("input").trigger("change");
+                });
+
+                btnDown.click(function() {
+                    var oldValue = parseFloat(input.val());
+                    if (oldValue <= min) {
+                        var newVal = oldValue;
+                    } else {
+                        var newVal = oldValue - 1;
+                    }
+                    spinner.find("input").val(newVal);
+                    spinner.find("input").trigger("change");
+                });
+
+            });
+
         }
     }
 })(jQuery);

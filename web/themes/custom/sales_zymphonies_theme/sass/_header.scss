@@ -4,7 +4,7 @@
     background-size: cover;
     position: relative;
     background: $headerBGColor;
-    padding: 5px 0;
+    padding: 1px 0;
     border-bottom: 1px solid #f7f7f7;
 
     nav {
@@ -68,7 +68,7 @@
 /* Region Top Menu */
 
 .top-menu {
-    padding: 10px 0;
+    padding: 10px 0 0 0;
     text-align: center;
     font-size: .75em;
     background: #f9f9f9;
@@ -76,7 +76,9 @@
 
 .region-top-menu {
 
-    height: auto;
+    height: 50px;
+    text-align: right;
+
     ul {
         text-align: center;
         margin: 0;
@@ -90,7 +92,7 @@
         display: inline-block;
 
         button.user-icon {
-            background: url("../images/account.png") no-repeat;
+            background: url("../images/account-filled.png") no-repeat;
             background-size: contain;
             height: $iconHeight;
             width: $iconWidth;
@@ -99,17 +101,14 @@
             border: none;
 
             &:hover{
-                background: url("../images/account-filled.png") no-repeat;
+                background: url("../images/account.png") no-repeat;
                 background-size: contain;
             }
             &:focus{
                 outline: none;
             }
-            &.is-active {
-                background: url("../images/account-filled.png") no-repeat;
-                background-size: contain;
-            }
         }
+
         .sub-menu {
             display: none;
             position: absolute;
@@ -120,12 +119,12 @@
             text-transform: uppercase;
 
             li {
-                padding: 5px 15px;
+                padding: 5px 25px;
                 text-align: left;
                 width: 100%;
 
                 &:hover{
-                    background: #009999;
+                    background: $menuDropDownHoverBg;
                     a {
                         color: white;
                     }
@@ -139,30 +138,65 @@
             }
         }
     }
+
+
     .block {
         display: inline-block;
+        vertical-align: top;
     }
     .block-views-blockwishlist-block-1 {
+        margin: 0 35px;
+
+        header{
+            position: relative;
+
+            & span{
+                right: 2px;
+            }
+        }
         header a {
-            background: url("../images/heart.png") no-repeat center;
+            background: url("../images/heart-filled.png") no-repeat center;
             background-size: contain;
-            height: $iconHeight;
+            line-height: $iconHeight;
+            width: 70px;
             display: inline-block;
-            color: transparent;
+            font-size: 0;
 
             &:hover{
-                background: url("../images/heart-filled.png") no-repeat center;
+                background: url("../images/heart.png") no-repeat center;
                 background-size: contain;
             }
         }
+
+        .views-row{
+            display: none;
+        }
+        .wishlist-total{
+            margin: 0 0 0 -22px;
+        }
     }
+
+
+    .cart-block--summary__count, .wishlist-total{
+        color: #fff;
+        background: $cartNumberColor;
+        font-size: 16px;
+        border-radius: 50%;
+        padding: 0 7px;
+        vertical-align: top;
+        position: absolute;
+        right: -14px;
+    }
+    .cart-block--summary{
+        position: relative;
+    }
+
     span.cart-block--summary__icon {
         background: url("../images/cart.png") no-repeat;
         background-size: contain;
         display: block;
         height: $iconHeight;
         width: $iconHeight;
-        margin-top: -24px;
 
         &.full{
             background: url("../images/cart-filled.png") no-repeat;
@@ -185,6 +219,7 @@
 
 #views-exposed-form-search-results-page-1 {
     display: table;
+    margin: 7px;
     width: 100%;
 
     .form-item,

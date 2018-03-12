@@ -20,11 +20,11 @@
  */
 #}
 <article{{ attributes }}>
-  <div class="col-md-5">
-    {{ product.variation_field_foto }}
-    {{ product.field_aditional_pics }}
-  </div>
   <div class="col-md-7">
+      {{ product.field_aditional_pics }}
+      {{ product.variation_field_foto }}
+  </div>
+  <div class="col-md-5">
     {{ product.variation_title }}
     {{ product.variation_sku }}
     {{ product.field_mark }}

@@ -42,7 +42,7 @@ nav h2{
         &:first-child {
 
             a {
-                background: url("../images/home.png") no-repeat;
+                background: url("../images/home-filled.png") no-repeat;
                 background-size: contain;
 
                 &.is-active {
@@ -50,7 +50,7 @@ nav h2{
                     background-size: contain;
                 }
                 &:hover {
-                    background: url("../images/home-filled.png") no-repeat;
+                    background: url("../images/home.png") no-repeat;
                     background-size: contain;
                 }
             }
@@ -63,21 +63,16 @@ nav h2{
 			max-width: 65px;
 			line-height: $iconHeight;
 			padding: 0 0 0 $iconHeight;
+			font-size: 0;
 
 			&:hover {
 				line-height: $iconHeight;
 				padding: 0 0 0 $iconHeight;
                 color: $menuTextActiveColor;
-			}
-			&:focus,
-			&:active, 
-			&.highlighted{
-				background: none;
-				color: $menuTextActiveColor;
-				line-height: 100%;
-				padding: 15px 20px;
+				//font-size: 12px;
 			}
 
+			&.highlighted,
 			&.sub-arrow{
 				color: #999;
 				font-size: 22px;
@@ -96,7 +91,7 @@ nav h2{
 
             &.contacts {
 
-                background: url("../images/phone.png") no-repeat;
+                background: url("../images/phone-filled.png") no-repeat;
                 background-size: contain;
                 height: $iconHeight;
                 width: $iconWidth;
@@ -107,13 +102,13 @@ nav h2{
                     background-size: contain;
                 }
                 &:hover {
-                    background: url("../images/phone-filled.png") no-repeat;
+                    background: url("../images/phone.png") no-repeat;
                     background-size: contain;
                 }
             }
 
             &.arrows {
-                background: url("../images/arrow.png") no-repeat;
+                background: url("../images/arrow--filled.png") no-repeat;
                 background-size: contain;
 
                 &.is-active {
@@ -121,7 +116,7 @@ nav h2{
                     background-size: contain;
                 }
                 &:hover {
-                    background: url("../images/arrow--filled.png") no-repeat;
+                    background: url("../images/arrow.png") no-repeat;
                     background-size: contain;
                 }
             }
@@ -133,6 +128,39 @@ nav h2{
 	display: none;
 	border-radius: 3px;
 	width: 100%;
+}
+
+#block-dodatkovemenu{
+    ul{
+
+        margin: 0;
+        //padding: 10px;
+
+        li{
+            list-style: none;
+            display: inline-block;
+            margin: 0 10px;
+            text-transform: uppercase;
+            height: auto;
+            padding: 10px;
+
+            a{
+                color: #555350;
+                font-weight: 600;
+                display: block;
+                padding: 10px 15px;
+            }
+
+            &:hover{
+                background: #555350;
+
+                a{
+                    color: white;
+                }
+            }
+        }
+    }
+
 }
 
 

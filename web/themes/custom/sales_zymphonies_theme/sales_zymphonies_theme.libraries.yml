@@ -7,6 +7,7 @@ bootstrap:
     includes/bootstrap/js/bootstrap.min.js: {}
   dependencies:
     - core/jquery
+    - core/jquery.ui
     - core/drupal.ajax
     - core/drupal
     - core/drupalSettings
@@ -21,8 +22,11 @@ global-components:
   js:  
     includes/smartmenus/jquery.smartmenus.min.js: {}
     js/custom.js: {}
+    js/super-menu.js: {}
   dependencies:
     - core/jquery
+    - core/jquery.ui
+    - core/jquery.ui.effect
     - core/drupal.ajax
     - core/drupal
     - core/drupalSettings

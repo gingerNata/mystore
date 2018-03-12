@@ -1,0 +1,74 @@
+
+// Cart
+input.delete-order-item {
+    background: url("../images/delete.png") no-repeat;
+    background-size: contain;
+    font-size: 0;
+    height: 35px;
+    width: 35px;
+
+    &:hover{
+        background: url("../images/delete.png") no-repeat;
+        background-size: contain;
+    }
+}
+
+.cart-form #edit-actions{
+    text-align: right;
+    margin-top: 2em;
+    margin-bottom: 5em;
+}
+
+// Languages
+.language-switcher-language-url {
+
+    margin-bottom: 0;
+
+    ul{
+        margin: 0;
+    }
+
+    li {
+        display: inline-block;
+
+        a {
+            display: block;
+            height: 40px;
+            width: 55px;
+            font-size: 0;
+        }
+    }
+
+    .ru a {
+        background: url("../images/ru.png") no-repeat;
+        background-size: contain;
+    }
+
+    .uk a {
+        background: url("../images/ua.png") no-repeat;
+        background-size: contain;
+    }
+}
+
+
+//Tolik )
+//Wish list
+.wishlist-form {
+
+    .move-wishlist-item {
+        background-color: #499800;
+    }
+    .views-field-purchasable-entity {
+        .field_foto {
+            width: 100px;
+            display: inline-block;
+            margin: 0 auto 0 auto;
+        }
+        .title {
+            display: inline-block;
+            max-width: 60%;
+            vertical-align: top;
+            margin-top: 15px;
+        }
+    }
+}

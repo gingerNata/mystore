@@ -1,0 +1,165 @@
+
+#block-categorymenu {
+    ul.hierarchical-taxonomy-menu {
+        margin: 0;
+        padding-left: 0;
+        position: relative;
+
+        .sub-rubric{
+            position: absolute;
+            background: white;
+            border: 1px solid $menuDropDownBg;
+            left: $widthLeftDownMenu;
+            height: 0;
+            width: 1000px;
+            z-index: 1;
+            padding-left: 30px;
+            -webkit-box-shadow: 2px 2px 8px 0px rgba(71, 71, 71, 0.75);
+            -moz-box-shadow: 2px 2px 8px 0px rgba(71, 71, 71, 0.75);
+            box-shadow: 2px 2px 8px 0px rgba(71, 71, 71, 0.75);
+
+            li{
+                margin: 20px 0 10px 20px;
+                text-align: center;
+                width: 150px;
+                border: 1px solid white;
+
+
+                &:hover {
+                    -webkit-box-shadow: 3px 2px 3px 0px rgba(71, 71, 71, 0.75);
+                    -moz-box-shadow: 3px 2px 3px 0px rgba(71, 71, 71, 0.75);
+                    box-shadow: 3px 2px 3px 0px rgba(71, 71, 71, 0.75);
+                    border: 1px solid #cfcfcf;
+                }
+
+                a{
+                    font-size: 15px;
+                    width: 100%;
+                    display: block;
+
+                    span{
+                        display: block;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+
+        li.permanent {
+            line-height: 65px;
+            padding: 0 20px;
+
+            a:focus, a.active{
+                text-decoration: none;
+            }
+
+            &:hover, &.selected{
+                background: #CD0028;
+            }
+
+            a {
+                color: white;
+            }
+            ul.sub-menu-left{
+                z-index: 2;
+                position: absolute;
+                width: $widthLeftDownMenu;
+                background: $menuDropDownBg;
+                padding: 0;
+                left: 0;
+                font-size: 0.8em;
+                -webkit-box-shadow: -2px 3px 8px 0px rgba(71, 71, 71, 0.75);
+                -moz-box-shadow: -2px 3px 8px 0px rgba(71, 71, 71, 0.75);
+                box-shadow: -2px 2px 3px 0px rgba(71, 71, 71, 0.75);
+                border: 1px solid #f9f9f9;
+                border-right: none;
+
+
+
+                li{
+                    width: 100%;
+                    border-bottom: 1px solid #F0F0F0;
+                    position: relative;
+
+
+                    img{
+                        transform: translateY(25%);
+
+                    }
+
+                    span.arr{
+                        background: url(../images/forward.png) no-repeat;
+                        background-size: contain;
+                        display: block;
+                        height: 15px;
+                        width: 15px;
+                        position: absolute;
+                        right: 5px;
+                        top: 40%;
+                    }
+
+                    &:hover, &.selected{
+                        background: $menuDropDownHoverBg;
+
+                        a {
+                            color: white;
+
+
+                            img:first-child{
+                                display: none;
+                            }
+
+                            img:nth-child(2){
+                                display: inline-block;
+                            }
+                        }
+
+                        span.arr{
+                            background-image: url("../images/forward-hover.png");
+                            height: 18px;
+                            width: 18px;
+                            top: 35%;
+                        }
+
+                        span.arr2{
+                            width: 0;
+                            height: 0;
+                            border-style: solid;
+                            border-width: 32px 0 32px 30px;
+                            border-color: transparent transparent transparent $menuDropDownHoverBg;
+                            position: absolute;
+                            right: -30px;
+                            top: 0;
+                            z-index: 6;
+                        }
+
+                    }
+
+                }
+
+                a{
+                    color: black;
+                    display: inline-block;
+                    width: 100%;
+                    padding: 0 15px;
+
+                    span{
+                        margin-left: 15px;
+                    }
+
+                    img:nth-child(2){
+                        display: none;
+                    }
+                }
+
+                ul.sub-menu-right{
+                    position: absolute;
+                    top: 0;
+                    left: 200px;
+                    width: 800px;
+                    height: inherit;
+                }
+            }
+        }
+    }
+}

@@ -2,17 +2,13 @@
 /* Testimonials */
 
 .testimonials-wrap{
-	background: #fafafa;
-	border-top: solid 1px #e3e3e3;
-	border-bottom: solid 1px #e3e3e3;
-	padding: 20px 0;
+	background: #eee;
 	text-align: center;
 	font-size: 1em;
 	line-height: 160%;
 }
 
 .region-testimonials{
-	max-width: 600px;
 	margin: 0 auto;
 }
 
@@ -40,7 +36,7 @@
 
 .topwidget{
 	padding: 20px 0;
-	text-align: center;	
+	text-align: center;
 	border-top: 1px solid #f7f7f7;
 	border-bottom: 1px solid #f7f7f7;
 
@@ -58,22 +54,117 @@
 
 .path-frontpage .content_layout{
 	text-align: center;
-	max-width: 750px;
+	//max-width: 750px;
 	margin: 0 auto;
 	padding: 20px 0;
 	overflow: hidden;
 }
 
 /*Region Homepage Message*/
+/* Last products*/
 
 .region-homepagemessage{
 	padding: 20px 0;
 	text-align: center;
-	max-width: 750px;
-	margin: 0 auto;
 
 	p, .block{ margin: 0; }
+    h2{
+        color: #333;
+        text-transform: uppercase;
+        font-size: 28px;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 30px;
+    }
+
+	.last-products{
+		.views-row{
+			width: 23%;
+		}
+
+        .price{
+            text-align: left;
+        }
+	}
 }
+
+
+/*Outfits*/
+
+.region-abovecontent h2.title{
+    color: #333;
+    text-transform: uppercase;
+    font-size: 28px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+
+.main-outfits {
+
+    a {
+        color: #333;
+    }
+
+}
+
+.outfits {
+    text-align: center;
+
+    article h2 {
+        font-size: 17px;
+        max-height: 22px;
+        overflow: hidden;
+    }
+
+    .tags {
+        font-style: italic;
+
+        a{ color: #8a8a8a;}
+
+        div { display: inline-block;}
+
+        div:not(:last-child):after{
+            content: ',';
+            color: #8a8a8a;
+        }
+    }
+
+    .views-row {
+        display: inline-block;
+        width: 31%;
+        vertical-align: top;
+    }
+
+    .more-link{
+        margin-top: 30px;
+
+        a{
+            background: $linkColor;
+            padding: 12px 25px;
+            color: white;
+
+            &:hover{
+                background: $linkColorHover;
+            }
+            &:active, &:visited {
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+
+/* Content */
+.categories{
+    .views-row{
+        display: inline-block;
+        width: 250px;
+    }
+}
+
 
 
 /*Address*/
@@ -82,9 +173,37 @@
 	color: #fff;
 	text-align: center;
 	padding: 20px 0;
-	background: image-url("world-map.png") #888 center no-repeat;
+	background: #555350 center no-repeat;
 
 	h2{ color: #fff; }
+}
+
+
+
+// Subscribe
+.simplenews-subscriptions-block-home-subscription{
+	margin-bottom: 0;
+
+	h2, .content, input, .form-item, .form-actions{
+		display: inline-block;
+		margin: 0 20px;
+	}
+
+	.form-item{
+		font-style: italic;
+	}
+
+	.field--type-email{
+		display: inline-block;
+
+		label{
+			display: none;
+		}
+
+		.description{
+			display: none;
+		}
+	}
 }
 
 
@@ -96,7 +215,7 @@
 	padding-bottom: 30px;
 
 	.block h2.title{
-	  margin: 5px 0 10px 0;
+		margin: 5px 0 10px 0;
 	}
 
 	.row > div{

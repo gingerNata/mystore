@@ -6,17 +6,25 @@ $baseFontSize: 15px;
 $bodyBGColor: #ffffff;
 $baseFontColor: #444;
 
-$linkColor: #C45900;
-$linkColorHover: #FF8B2A;
+//$skyBlue: #5777f3;
+
+
+//$linkColor: $skyBlue;
+$linkColor: #CD0028;
+$linkColorHover: #499800;
+//$linkColorHover: $skyBlue;
 $greyOne : #eee;
 
 
 /*Header*/
 
-$headerBGColor: #04577C;
+$headerBGColor: #9E001F;
 $headerTextColor: $baseFontColor;
-$iconHeight: 50px;
-$iconWidth: 50px;
+$iconHeight: 35px;
+$iconWidth: 35px;
+$cartNumberColor: #499800;
+//$cartNumberColor: $skyBlue;
+$widthLeftDownMenu: 200px;
 
 
 /*Menu Color*/
@@ -24,6 +32,8 @@ $iconWidth: 50px;
 $menuTextColor: $baseFontColor;
 $menuTextActiveColor: $linkColor;
 $menuDropDownBg: #f9f9f9;
+//$menuDropDownHoverBg: $skyBlue;
+$menuDropDownHoverBg: #499800;
 
 
 /*Mixins*/
@@ -32,7 +42,7 @@ $menuDropDownBg: #f9f9f9;
 	background: $linkColor;
 	color: #fff;
 	border: 0;
-	padding: 10px 15px;
+	padding: 15px 20px;
 	line-height: 100%;
 	border-radius: 0;
 }

@@ -407,6 +407,21 @@
 <!--End: Footer -->
 
 
+<!-- Start: Under the content -->
+<div id="under-content-wrapper">
+    <div class="container">
+        {% if page.under_content %}
+            <div class="row">
+                <div class="under_content col-md-12">
+                    {{ page.under_content }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<!-- End: Under the content -->
+
+
 <!-- Start: Google map -->
 {% if page.google_map %}
   <div class="google_map">
@@ -475,7 +490,7 @@
       <!-- Start: Credit link -->
       {% if show_credit_link %}
         <div class="col-sm-6">
-          <p class="credit-link">Designed By <a href="http://www.zymphonies.com" target="_blank">Zymphonies</a></p>
+          <p class="credit-link">Designed By Natalia Mateychuk</p>
         </div>
       {% endif %}
       <!-- End: Credit link -->
