@@ -96,3 +96,20 @@ jQuery(document).ready(function ($) {
         }
     }
 })(jQuery);
+
+(function ($) {
+    Drupal.behaviors.product_color = {
+
+        attach: function (context, settings) {
+
+            var colorBlock = $('#block-kolir .facet-item__value');
+            colorBlock.each(function (index) {
+                $(this).css('background-color', '#' + $(this).text());
+            });
+            var colorBlock = $('#block-kolir1 .facet-item__value');
+            colorBlock.each(function (index) {
+                $(this).css('background-color', '#' + $(this).text());
+            });
+        }
+    }
+})(jQuery);

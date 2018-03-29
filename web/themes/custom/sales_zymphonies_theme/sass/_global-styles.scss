@@ -9,6 +9,7 @@ body{
   overflow-x: hidden;
   font-weight: 400;
   background: $bodyBGColor;
+	height: 100%;
 }
 
 
@@ -211,7 +212,7 @@ label.option {
 .label {
 	display:inline;
 	font-size: inherit;
-	font-weight: bold;
+	font-weight: 600;
 	margin: 0;
 	padding: 0;
 }

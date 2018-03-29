@@ -5,12 +5,17 @@
 
             hideAllDown();
 
-            var menu = $('.hierarchical-taxonomy-menu');
-            var permanent_link = $('.hierarchical-taxonomy-menu .permanent');
+            var menu = $('#block-categorymenu .hierarchical-taxonomy-menu');
+            var permanent_link = $('#block-categorymenu .hierarchical-taxonomy-menu .menu-item--expanded.permanent');
+            var allPermanent_link = $('#block-categorymenu .hierarchical-taxonomy-menu .permanent');
             var exp_perm_link = $('#block-categorymenu .menu-item--expanded.permanent>a');
 
             exp_perm_link.click(function () {
                 event.preventDefault();
+            })
+                .dblclick(function() {
+                    window.location = this.href;
+                    return false;
             });
 
             //close on out click
@@ -44,7 +49,7 @@
                             $('.sub-rubric').show().html($(this).find('.sub-menu-left :first-child .sub-menu-right').html());
                             showDown(this);
 
-                            permanent_link.removeClass('selected');
+                            allPermanent_link.removeClass('selected');
                             $(this).addClass('selected');
                             $(this).find('.sub-menu-left li:first-child').addClass('selected');
                         }

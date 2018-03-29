@@ -148,6 +148,7 @@
 
             &:hover{
                 background: $linkColorHover;
+				text-decoration: none;
             }
             &:active, &:visited {
                 text-decoration: none;
@@ -157,14 +158,61 @@
 }
 
 
-/* Content */
-.categories{
-    .views-row{
-        display: inline-block;
-        width: 250px;
-    }
-}
+.path-frontpage{
 
+	.region-content .views-field-name a{
+		position: absolute;
+		bottom: 17%;
+		left: 10%;
+		right: 10%;
+		text-align: center;
+		background: rgba(245, 223, 139, 0.76);
+		width: 80%;
+		font-size: 1.5em;
+		line-height: 40px;
+		color: black;
+
+		&:hover {
+			text-decoration: none;
+		}
+	}
+
+    .views-row:hover .views-field-field-image-to-main a:after{
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 98%;
+        width: 100%;
+        z-index: 5;
+        background: rgba(0, 0, 0, 0.76);
+        content: 'Перейти';
+        color: white;
+        text-align: center;
+        line-height: 250px;
+        font-size: 1.5em;
+        font-weight: 600;
+    }
+
+	#block-block-main-category{
+		display: inline-block;
+		max-width: 49%;
+		text-align: right;
+		position: relative;
+        .views-row:hover .views-field-field-image-to-main a:after {
+            line-height: 500px;
+        }
+	}
+
+	.block-system-main-block{
+		display: inline-block;
+		max-width: 49%;
+		text-align: left;
+		.views-row{
+			display: inline-block;
+			position: relative;
+		}
+	}
+}
 
 
 /*Address*/
@@ -185,9 +233,12 @@
 	margin-bottom: 0;
 
 	h2, .content, input, .form-item, .form-actions{
-		display: inline-block;
+		//display: inline-block;
 		margin: 0 20px;
 	}
+    input{
+        margin-top: 7px;
+    }
 
 	.form-item{
 		font-style: italic;

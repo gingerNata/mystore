@@ -1,11 +1,16 @@
 
 #block-categorymenu {
+
+    a:hover{
+        text-decoration: none;
+    }
     ul.hierarchical-taxonomy-menu {
         margin: 0;
         padding-left: 0;
         position: relative;
 
         .sub-rubric{
+            display: none;
             position: absolute;
             background: white;
             border: 1px solid $menuDropDownBg;
@@ -46,21 +51,25 @@
         }
 
         li.permanent {
-            line-height: 65px;
-            padding: 0 20px;
+
 
             a:focus, a.active{
                 text-decoration: none;
             }
 
-            &:hover, &.selected{
+            &.menu-item--active, &:hover, &.selected{
                 background: #CD0028;
             }
 
             a {
                 color: white;
+                line-height: 65px;
+                padding: 0 30px;
+                margin: 0;
+                display: block;
             }
             ul.sub-menu-left{
+                display: none;
                 z-index: 2;
                 position: absolute;
                 width: $widthLeftDownMenu;

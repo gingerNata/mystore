@@ -1,3 +1,17 @@
+/* Colors*/
+
+$brightRed: #CD0028;
+$nonBrightRed: #AC1C38;
+$darkRed: #9E001F;
+$darkRosy: #DE2549;
+$lightRosy: #DE4260;
+
+$brightGreen: #3EBF00;
+$nonBrightGreen: #459F1A;
+$darkGreen: #309300;
+$salat: #5CD423;
+$lightSalat: #6FD43F;
+
 
 /*Variables*/
 
@@ -6,13 +20,10 @@ $baseFontSize: 15px;
 $bodyBGColor: #ffffff;
 $baseFontColor: #444;
 
-//$skyBlue: #5777f3;
 
 
-//$linkColor: $skyBlue;
 $linkColor: #CD0028;
-$linkColorHover: #499800;
-//$linkColorHover: $skyBlue;
+$linkColorHover: #9E001F;
 $greyOne : #eee;
 
 
@@ -23,7 +34,6 @@ $headerTextColor: $baseFontColor;
 $iconHeight: 35px;
 $iconWidth: 35px;
 $cartNumberColor: #499800;
-//$cartNumberColor: $skyBlue;
 $widthLeftDownMenu: 200px;
 
 
@@ -32,7 +42,6 @@ $widthLeftDownMenu: 200px;
 $menuTextColor: $baseFontColor;
 $menuTextActiveColor: $linkColor;
 $menuDropDownBg: #f9f9f9;
-//$menuDropDownHoverBg: $skyBlue;
 $menuDropDownHoverBg: #499800;
 
 

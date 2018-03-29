@@ -16,6 +16,7 @@ libraries:
 regions:
 
   #Header
+  header: 'Header'
   contact_email: 'Contact email'
   site_logo: 'Site logo'
   top_menu: 'Top menu'
@@ -35,7 +36,6 @@ regions:
   topwidget_second: 'Top second widget'
   topwidget_third: 'Top third widget'
   abovecontent: 'Above content'
-
 
   #Global region
   highlighted: 'Highlighted' 
@@ -60,8 +60,18 @@ regions:
   footer_menu: 'Footer menu'
   google_map: 'Google map'
   auto_hidden_block: 'Auto hidden blocks'
-# Information added by Drupal.org packaging script on 2016-10-13
-version: '8.x-1.0'
+
+  page_top: 'Page top'
+  page_bottom: 'Page bottom'
+  
+# Information added by Drupal.org packaging script on 2017-11-04
+# version: '8.x-1.2'
+# core: '8.x'
+# project: 'sales_zymphonies_theme'
+# datestamp: 1509822787
+
+# Information added by Drupal.org packaging script on 2017-11-28
+version: '8.x-1.3'
 core: '8.x'
 project: 'sales_zymphonies_theme'
-datestamp: 1476378841
+datestamp: 1511881386

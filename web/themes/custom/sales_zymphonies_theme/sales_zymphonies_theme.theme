@@ -15,10 +15,6 @@ use Drupal\file\Entity\File;
 use Drupal\Core\Url;
 use Drupal\file\Plugin\Core\Entity\FileInterface;
 
-function sales_zymphonies_theme_preprocess_block(&$variables){
-
-}
-
 /**
  * Implements hook_preprocess_page() for block templates.
  */
@@ -93,12 +89,14 @@ function sales_zymphonies_theme_preprocess_page(&$variables) {
   $variables['rss_url'] = theme_get_setting('rss_url');
   $variables['show_credit_link'] = theme_get_setting('show_credit_link');
 
+
   //To get the current url
   $current_url  = \Drupal::request()->getRequestUri();
   $current_path = explode("/", $current_url);
-  if(!empty($current_path[2])) {
+  if (isset($current_path[2])) {
     $variables['current_path'] = $current_path[2];
   }
+
   // Slider
   // Asign Variable for Slider
   if ($variables['is_front']) {
@@ -160,10 +158,9 @@ function sales_zymphonies_theme_get_slider_content() {
  * Implements hook_form_system_theme_settings_alter().
  */
 function sales_zymphonies_theme_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
-  
 
   $form['sales_zymphonies_theme_info'] = array(
-    '#markup' => '<h2><br/>Advanced Theme Settings</h2><div class="messages messages--warning">Clear cache after making any changes in theme settings. <a href="../../config/development/performance">Click here to clear cashe</a></div>'
+    '#markup' => '<h2><br/>Advanced Theme Settings</h2><div class="messages messages--warning">Clear cache after making any changes in theme settings. <a href="../../config/development/performance">Click here to clear cache</a></div>'
   );
 
   //Social Icon Link
@@ -217,7 +214,7 @@ function sales_zymphonies_theme_form_system_theme_settings_alter(&$form, \Drupal
     '#default_value' => theme_get_setting('rss_url'),
   );
 
-  // Custom submit to save the file permenant.
+  // Custom submit to save the file permanent.
   // $form['#submit'][] = 'sales_zymphonies_theme_settings_form_submit';
 
   //Show/Hide credit
@@ -235,7 +232,7 @@ function sales_zymphonies_theme_form_system_theme_settings_alter(&$form, \Drupal
     '#description'   => t("Highly recomend to display credit in footer"),
   );
 
-  //Slide show config 
+  //Slide show config
   $form['sales_zymphonies_theme_settings']['slideshow'] = array(
     '#type' => 'details',
     '#title' => t('Front Page Slideshow'),
@@ -288,23 +285,26 @@ function sales_zymphonies_theme_form_system_theme_settings_alter(&$form, \Drupal
       '#title' => t('Slide '.$i.' Description'),
       '#default_value' => theme_get_setting('slide_description_' . $i,'sales_zymphonies_theme'),
     );
-    
+
     $form['sales_zymphonies_theme_settings']['slideshow']['slide' . $i]['slide_url_' . $i] = array(
       '#type' => 'textfield',
       '#title' => t('Slide '.$i.' URL'),
       '#default_value' => theme_get_setting('slide_url_' . $i,'sales_zymphonies_theme'),
     );
+
+    // Make the uploaded images permanent.
+    $image = theme_get_setting('slide_image_path'.$i,'sales_zymphonies_theme');
+    if(!empty($image)){
+      $file = File::load($image[0]);
+      $file->status = FILE_STATUS_PERMANENT;
+      $file->save();
+      $file_usage = \Drupal::service('file.usage');
+      $$file_usage_check = $file_usage->listUsage($file);
+      if (empty($file_usage_check)) {
+        $file_usage->add($file, 'sales_zymphonies_theme', 'theme', $image[0]);
+      }
+    }
   }
 }
 
-/**
- * Implements hook_preprocess_breadcrumb().
- */
-function sales_zymphonies_theme_preprocess_breadcrumb(&$variables){
-  if(($node = \Drupal::routeMatch()->getParameter('node')) && $variables['breadcrumb']){
-    $variables['breadcrumb'][] = array(
-     'text' => $node->getTitle(),
-     'url' => $node->URL()
-   );
-  }
-}
+

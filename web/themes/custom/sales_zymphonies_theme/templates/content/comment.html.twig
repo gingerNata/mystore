@@ -87,6 +87,9 @@
   <mark class="hidden" data-comment-timestamp="{{ new_indicator_timestamp }}"></mark>
 
   <footer class="comment-wrap">
+    <div class="user-picture">
+      {{ user_picture }}
+    </div>
     <div class="author-details">
       {% if parent %}
         <p class="parent visually-hidden">{{ parent }}</p>
@@ -96,11 +99,6 @@
     <div class="author-comments">
       <p class="comment-submitted">{{ submitted }}</p>
       <div{{ content_attributes.addClass('content') }}>
-        {% if title %}
-          {{ title_prefix }}
-          <h3{{ title_attributes }}>{{ title }}</h3>
-          {{ title_suffix }}
-        {% endif %}
         {{ content }}
       </div>
     </div>   

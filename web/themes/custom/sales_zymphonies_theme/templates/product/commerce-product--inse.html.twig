@@ -20,21 +20,19 @@
  */
 #}
 <article{{ attributes }}>
-  <div class="col-md-7">
-      {{ product.field_aditional_pics }}
-      {{ product.variation_field_foto }}
+  <div class="col-md-6">
+    {{ product.field_aditional_pics }}
+    {{ product.variation_field_foto }}
+    {{ product.field_comment }}
   </div>
-  <div class="col-md-5">
+  <div class="col-md-6">
     {{ product.variation_title }}
     {{ product.variation_sku }}
     {{ product.field_mark }}
     {{ product.field_material }}
     {{ product.variation_price }}
     {{ product.variations }}
-  </div>
-  <div class="col-md-12">
     {{ product.body }}
-    {{ product.field_comment }}
   </div>
   {#{{- product|without('variation_attributes') -}}#}
 </article>
