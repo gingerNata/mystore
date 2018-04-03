@@ -4,8 +4,6 @@
     background-size: cover;
     position: relative;
     background: $headerBGColor;
-    padding: 1px 0;
-    border-bottom: 1px solid #f7f7f7;
 
     nav {
         background: none;
@@ -119,21 +117,24 @@
             text-transform: uppercase;
 
             li {
-                padding: 5px 25px;
                 text-align: left;
                 width: 100%;
 
-                &:hover{
-                    background: $menuDropDownHoverBg;
-                    a {
-                        color: white;
-                    }
-                }
-
                 a {
+                    display: block;
+                    padding: 5px 10px;
                     color: #333;
                     line-height: 30px;
                     white-space:nowrap;
+
+                    &:hover{
+                        background: $menuDropDownHoverBg;
+                        color: white;
+                        text-decoration: none;
+                    }
+                    &:active, &:visited {
+                        text-decoration: none;
+                    }
                 }
             }
         }
@@ -206,7 +207,84 @@
     }
 }
 
+
+
+.fixed-top-menu{
+    position: fixed;
+    z-index: 9999;
+    top: 7px;
+    right: 20px;
+
+
+    nav {
+
+        button.user-icon {
+            background: url(../images/user.png) no-repeat;
+            background-size: contain;
+
+            &:hover {
+                background: url("../images/contacts-filled.png") no-repeat;
+                background-size: contain;
+            }
+        }
+    }
+
+    .block-views-blockwishlist-block-1 {
+        margin: 0;
+
+        header a {
+            background: url("../images/heart-white.png") no-repeat center;
+            background-size: contain;
+
+            &:hover {
+                background: url("../images/heart-filled-white.png") no-repeat center;
+                background-size: contain;
+            }
+        }
+    }
+
+    span.cart-block--summary__icon {
+        background: url(../images/shopping-cart-white.png) no-repeat;
+        background-size: contain;
+
+
+        &.full{
+            background: url("../images/cart-filled-white.png") no-repeat;
+            background-size: contain;
+        }
+
+    }
+
+
+}
+
 /*Search Form*/
+
+.fixed-nav .region-search {
+    padding: 0;
+    right: 160px;
+    text-align: right;
+
+    input#edit-search-api-fulltext {
+        display: none;
+    }
+
+    input.form-submit {
+        background: url("../images/search-white.png") no-repeat center!important;
+    }
+
+    #views-exposed-form-search-results-page-1:hover{
+
+        input#edit-search-api-fulltext {
+            display: inline-block;
+            width: 80%;
+        }
+
+        input.form-submit {
+            background: url("../images/search-white.png") no-repeat center $menuDropDownHoverBg!important;
+        }
+    }
+}
 
 .search-block-form {
     margin: 0 auto;
@@ -229,7 +307,7 @@
     }
 
     input.form-submit {
-        background: image-url("search.png") no-repeat center $darkGreen;
+        background: image-url("search.png") no-repeat center $menuDropDownHoverBg;
         font-size: 0;
         width: 37px;
         height: 37px;

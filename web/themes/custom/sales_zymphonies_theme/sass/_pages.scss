@@ -299,3 +299,37 @@ strong{
         }
     }
 }
+
+/**********************************************************/
+/*                 CHECKOUT PAGE                          */
+/**********************************************************/
+
+div.address-container-inline > .form-item {
+
+    label{
+        display: none;
+    }
+}
+
+.commerce-checkout-flow-multistep-default #edit-payment-information-billing-information{
+
+    label{
+        display: none;
+    }
+
+    .form-tel,.given-name,.family-name,.address-line1,.locality,.js-text-full{
+        width: 250px;
+    }
+
+    .form-item-payment-information-billing-information-address-0-address-address-line1,
+    .form-item-payment-information-billing-information-address-0-address-locality{
+        display: inline-block;
+        margin: 15px 15px 15px 0;
+    }
+}
+
+.form-item-sidebar-coupon-redemption-form-code{
+    input{
+        width: 250px;
+    }
+}

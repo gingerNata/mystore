@@ -145,7 +145,19 @@
         .buy-form{
 
             .button--primary{
-                background: $menuDropDownHoverBg;
+                margin-left: 30px;
+                padding-right: 45px;
+                background-image: url(../images/buy.png);
+                background-repeat: no-repeat;
+                background-position: 80px;
+
+                &:after {
+                    content: 'bn v';
+                    display: inline-block;
+                    height: 30px;
+                    width: 30px;
+
+                }
             }
         }
 
@@ -332,5 +344,15 @@
     h2{
         text-align: center;
         font-size: 1.5em;
+    }
+}
+
+
+.region-under-content{
+
+    .views-row{
+        display: inline-block;
+        width: 250px;
+        height: 430px;
     }
 }

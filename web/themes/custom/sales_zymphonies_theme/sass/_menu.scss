@@ -163,6 +163,27 @@ nav h2{
     }
 
 }
+/* Region google map */
+
+.region-google-map{
+	text-align: center;
+
+    .menu {
+        margin-top: 20px;
+        li{
+            display: inline-block;
+
+            a{
+                color: #333;
+                margin: 15px;
+            }
+        }
+    }
+
+    li:not(:last-child){
+        border-right: 1px solid #8f8f8f;
+    }
+}
 
 
 /*Footer Menu*/

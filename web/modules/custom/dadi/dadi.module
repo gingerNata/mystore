@@ -244,3 +244,29 @@ function dadi_theme($existing, $type, $theme, $path)
   ];
 }
 
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function dadi_preprocess_input(&$variables) {
+
+
+  if (array_key_exists('#id', $variables['element'])) {
+    $key = 'edit-payment-information-billing-information-address-0-address';
+    $addressArray = [
+      'given-name' => 'First Name',
+      'family-name' => 'Last Name',
+      'organization' => 'Company',
+      'address-line1' => 'Address',
+      'address-line2' => 'Secondary Address',
+      'postal-code' =>'Posta Code',
+      'locality' => 'City'
+    ];
+    $id = $variables['element']['#id'];
+    foreach ($addressArray as $k => $name){
+      $idSearch = $key.'-'.$k;
+      if($id == $idSearch){
+        $variables['attributes']['placeholder']= $variables['element']['#title'];
+      }
+    }
+  }
+}

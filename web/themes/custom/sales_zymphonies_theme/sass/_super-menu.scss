@@ -1,3 +1,56 @@
+.fixed-nav{
+    z-index: 999;
+    position: fixed!important;
+    top:0;
+    width: 100%;
+
+    #block-secondlogo{
+        display: inline-block;
+
+        .content{
+            margin-top: 7px;
+
+            img{
+                max-height: 40px;
+            }
+        }
+    }
+
+    .block-category-menu{
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    #block-categorymenu ul.hierarchical-taxonomy-menu {
+        padding-left: 30px;
+
+        li.permanent {
+
+            a {
+                line-height: 55px;
+                padding: 0 20px;
+            }
+
+            ul.sub-menu-left {
+                left: -100px;
+
+                a{
+                    line-height: 65px;
+                }
+            }
+        }
+
+        .sub-rubric{
+            left: 100px;
+        }
+    }
+
+}
+
+
+#block-secondlogo{
+    display: none;
+}
 
 #block-categorymenu {
 

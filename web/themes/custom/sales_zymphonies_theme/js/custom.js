@@ -1,4 +1,4 @@
-/* --------------------------------------------- 
+/* ---------------------------------------------
  * Filename:     custom.js
  * Version:      1.0.0 (2016-03-05)
  * Website:      http://www.zymphonies.com
@@ -29,26 +29,41 @@ jQuery(document).ready(function ($) {
         });
     }
 
-
+    var nav = $('header.main-header');
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 250) {
+            nav.addClass("fixed-nav");
+        } else {
+            nav.removeClass("fixed-nav");
+        }
+    });
+    var topMenu = $('.region-top-menu');
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 250) {
+            topMenu.addClass("fixed-top-menu");
+        } else {
+            topMenu.removeClass("fixed-top-menu");
+        }
+    });
 
 });
 (function ($) {
     Drupal.behaviors.main = {
 
         attach: function (context, settings) {
-
-            var delay = 1500, setTimeoutConst;
-
-                $('.user-icon').mouseover(function () {
-                $('.sub-menu').show();
-            }).mouseout(function () {
-                 setTimeoutConst = setTimeout(function() {
-                     $('.sub-menu').hide();
-                 }, delay)
-            });
+            var userMenu = $('#block-useraccountmenu');
+            var userSubMenu = $('#block-useraccountmenu .sub-menu');
+            userMenu.mouseover(function () {
+                userSubMenu.show();
+            })
+                .mouseout(function () {
+                    userSubMenu.hide();
+                })
         }
     }
 })(jQuery);
+
+
 (function ($) {
     Drupal.behaviors.product_custom = {
 
