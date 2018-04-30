@@ -31,7 +31,7 @@ jQuery(document).ready(function ($) {
 
     var nav = $('header.main-header');
     $(window).scroll(function () {
-        if ($(this).scrollTop() > 250) {
+        if ($(this).scrollTop() > 300) {
             nav.addClass("fixed-nav");
         } else {
             nav.removeClass("fixed-nav");
@@ -39,7 +39,7 @@ jQuery(document).ready(function ($) {
     });
     var topMenu = $('.region-top-menu');
     $(window).scroll(function () {
-        if ($(this).scrollTop() > 250) {
+        if ($(this).scrollTop() > 360) {
             topMenu.addClass("fixed-top-menu");
         } else {
             topMenu.removeClass("fixed-top-menu");

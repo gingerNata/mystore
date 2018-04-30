@@ -8,10 +8,10 @@
             var menu = $('#block-categorymenu .hierarchical-taxonomy-menu');
             var permanent_link = $('#block-categorymenu .hierarchical-taxonomy-menu .menu-item--expanded.permanent');
             var allPermanent_link = $('#block-categorymenu .hierarchical-taxonomy-menu .permanent');
-            var exp_perm_link = $('#block-categorymenu .menu-item--expanded.permanent>a');
+            var exp_perm_link = $('#block-categorymenu .hierarchical-taxonomy-menu a.permanent');
 
-            exp_perm_link.click(function () {
-                event.preventDefault();
+            permanent_link.click(function () {
+                // event.preventDefault();
             })
                 .dblclick(function() {
                     window.location = this.href;
@@ -32,7 +32,9 @@
             });
 
             //on click open menu
-            permanent_link.unbind('click').click(function () {
+            permanent_link.unbind('click').click(function (ff) {
+
+                var target = $(event.target);
 
                 menu.toggleClass('open');
 
@@ -58,10 +60,16 @@
                         }
                     })
                 }
+                else if (target.hasClass('tmp')){
+                    console.log(1);
+                    window.location = target.href;
+                }
+
                 else {
                     permanent_link.removeClass('selected');
                     hideAllDown();
                 }
+                console.log(target);
                 return false
 
             });

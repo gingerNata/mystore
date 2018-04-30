@@ -16,11 +16,19 @@
     current_depth == 1 ? 'sub-menu-right' : '',
     ]
     %}
+    {%
+    set aClass = [
+    route_tid == item.tid ? 'active' : '',
+    current_depth == 0 ? 'permanent' : '',
+    ]
+    %}
+
     <li class="{{ liClass|join(' ') }}">
 
-      <a href="{{ item.url }}" {% if route_tid == item.tid %}class="active"{% endif %}>
+      <a href="{{ item.url }}" class="{{ aClass|join(' ') }}">
         {% if item.image %}
-          <img class="menu-item-image" src="{{ item.image }}" {% if item.use_image_style == false %}height="{{ item.height }}" width="{{ item.width }}"{% endif %} />
+          <img class="menu-item-image" src="{{ item.image }}"
+               {% if item.use_image_style == false %}height="{{ item.height }}" width="{{ item.width }}"{% endif %} />
         {% endif %}
         <span>{{ item.name }}</span>
       </a>

@@ -192,10 +192,6 @@ strong{
 	Outfits Page
 -----------------------------*/
 
-.path-outfits{
-
-}
-
 .outfits .form-item{
 
 	display: inline-block;
@@ -228,6 +224,12 @@ strong{
 	Outfit Page
 -----------------------------*/
 .page-node-type-outfit{
+
+    .field_outfit_picture{
+        float: left;
+        margin-right: 25px;
+    }
+
 
     .layout__region--second{
        padding: 10px 40px;
@@ -273,13 +275,15 @@ strong{
         font-size: 1.3em;
         font-weight: 600;
         display: block;
-        margin: 50px 0 30px 0;
+        padding: 50px 0 30px 0;
         text-align: center;
     }
 
     .field_products {
 
-		.multiple-content > .field-content{
+        clear: both;
+
+        .multiple-content > .field-content{
             display: inline-block;
             vertical-align: top;
             border: 2px solid #eeeeee;
