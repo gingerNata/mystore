@@ -5,12 +5,12 @@
 
             hideAllDown();
 
-            var menu = $('#block-categorymenu .hierarchical-taxonomy-menu');
-            var permanent_link = $('#block-categorymenu .hierarchical-taxonomy-menu .menu-item--expanded.permanent');
-            var allPermanent_link = $('#block-categorymenu .hierarchical-taxonomy-menu .permanent');
-            var exp_perm_link = $('#block-categorymenu .hierarchical-taxonomy-menu a.permanent');
+            var menu = $('#block-categorymenu .mhierarchical-taxonomy-menu');
+            var permanent_link = $('#block-categorymenu .mhierarchical-taxonomy-menu .menu-item--expanded.permanent');
+            var allPermanent_link = $('#block-categorymenu .mhierarchical-taxonomy-menu .permanent');
+            var exp_perm_link = $('#block-categorymenu .mhierarchical-taxonomy-menu a.permanent');
 
-            permanent_link.click(function () {
+            exp_perm_link.click(function () {
                 // event.preventDefault();
             })
                 .dblclick(function() {
@@ -21,8 +21,8 @@
             //close on out click
             $(document).click(function (e) {
                 var $target = $(event.target);
-                if (!$target.parents().is(".hierarchical-taxonomy-menu")
-                    && !$target.is(".hierarchical-taxonomy-menu") && menu.hasClass('open')) {
+                if (!$target.parents().is("#block-categorymenu .mhierarchical-taxonomy-menu")
+                    && !$target.is("#block-categorymenu .mhierarchical-taxonomy-menu") && menu.hasClass('open')) {
 
                     permanent_link.removeClass('selected');
 
@@ -46,7 +46,7 @@
                     $(this).addClass('selected');
 
 
-                    $('.hierarchical-taxonomy-menu.open .permanent').on( "mouseenter", function (e) {
+                    $('.mhierarchical-taxonomy-menu.open .permanent').on( "mouseenter", function (e) {
                         if(menu.hasClass('open')) {
                             $('.sub-rubric').show().html($(this).find('.sub-menu-left :first-child .sub-menu-right').html());
                             showDown(this);
@@ -61,16 +61,16 @@
                     })
                 }
                 else if (target.hasClass('tmp')){
-                    console.log(1);
-                    window.location = target.href;
+                    console.log(target);
+                    window.location = target[0].href;
                 }
 
                 else {
                     permanent_link.removeClass('selected');
                     hideAllDown();
                 }
-                console.log(target);
-                return false
+                // console.log(target);
+                return false;
 
             });
 

@@ -31,7 +31,7 @@
                     <img class="menu-item-image" src="{{ image }}" {% if item.use_image_style == false %}height="{{ item.height }}" width="{{ item.width }}"{% endif %} />
                     {% endfor %}
                 {% endif %}
-                <span>{{ item.name }}</span>
+                {{ item.name }}
             </a>
             {% if current_depth == 1 %}
                 <span class="arr"></span>
@@ -51,7 +51,7 @@
 {% endmacro %}
 
 {% import _self as macros %}
-<ul class="menu hierarchical-taxonomy-menu">
+<ul class="menu mhierarchical-taxonomy-menu">
     <div class="main-rubrics">
     {{ macros.menu_links(menu_tree, route_tid, 0, max_depth) }}
     </div>

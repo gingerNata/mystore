@@ -111,7 +111,7 @@ function comment_ajax_callback(array &$form, FormStateInterface $form_state)
     $options = array(
       'dialogClass' => 'popup-dialog-class',
       'width' => '300',
-      'height' => '300',
+      'height' => '320',
     );
     $title = t('Subscribe to news');
     $email = $form_state->getValue('field_e_mail')[0]['value'];
@@ -133,12 +133,12 @@ function _get_popup_content($email)
 {
   global $base_url;
 
-  $succes_link = '<a href="'.$base_url.'/dadi/submit/subscribe/' . $email . '">' . t('Subscribe') . '</a>';
+  $succes_link = '<a class="ysub" href="'.$base_url.'/dadi/submit/subscribe/' . $email . '">' . t('Subscribe') . '</a>';
   $content = t('Would you like to subscribe to new items?');
   $content .= "<div class='popup-email'>" . $email . "</div>";
   $content .= '<div class="after-message">' . t('Any spam. Only useful information') . '</div>';
-  $content .= '<a href="/dadi/reset/subscribe">' . t('Don\'t subscribe') . '</a>';
-  $content .= "<button class='btn btn-success'>$succes_link</button>";
+  $content .= '<div class="answer"><a href="/dadi/reset/subscribe">' . t('Don\'t subscribe') . '</a>';
+  $content .= "$succes_link</div>";
   return $content;
 }
 
@@ -251,22 +251,24 @@ function dadi_preprocess_input(&$variables) {
 
 
   if (array_key_exists('#id', $variables['element'])) {
-    $key = 'edit-payment-information-billing-information-address-0-address';
+    $key = 'payment_information[billing_information][address][0][address]';
     $addressArray = [
-      'given-name' => 'First Name',
-      'family-name' => 'Last Name',
+      'given_name' => 'First Name',
+      'family_name' => 'Last Name',
       'organization' => 'Company',
-      'address-line1' => 'Address',
-      'address-line2' => 'Secondary Address',
-      'postal-code' =>'Posta Code',
+      'middle-name' => 'Middle name',
+      'address_line1' => 'Address',
+      'address_line2' => 'Secondary Address',
+      'postal_code' =>'Posta Code',
       'locality' => 'City'
     ];
-    $id = $variables['element']['#id'];
+    $id = $variables['element']['#name'];
     foreach ($addressArray as $k => $name){
-      $idSearch = $key.'-'.$k;
+      $idSearch = $key.'['.$k.']';
       if($id == $idSearch){
         $variables['attributes']['placeholder']= $variables['element']['#title'];
       }
     }
   }
 }
+//payment_information[billing_information][address][0][address][given_name]

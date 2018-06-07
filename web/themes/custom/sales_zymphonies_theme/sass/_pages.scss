@@ -315,18 +315,28 @@ div.address-container-inline > .form-item {
     }
 }
 
-.commerce-checkout-flow-multistep-default #edit-payment-information-billing-information{
+.commerce-checkout-flow-multistep-default [data-drupal-selector="edit-payment-information-billing-information"] {
 
-    label{
-        display: none;
-    }
+  label {
+    display: none;
+  }
 
-    .form-tel,.given-name,.family-name,.address-line1,.locality,.js-text-full{
-        width: 250px;
-    }
+  .address-line1, .locality, .js-text-full {
+    width: 300px;
+  }
+  .form-tel, .organization {
+    width: 300px;
+  }
+  .given-name, .organization, .family-name {
+    width: 200px;
+  }
 
-    .form-item-payment-information-billing-information-address-0-address-address-line1,
-    .form-item-payment-information-billing-information-address-0-address-locality{
+  div.address-container-inline{
+  display: inline-block;
+  }
+  .form-item-payment-information-billing-information-address-0-address-address-line1,
+  .form-item-payment-information-billing-information-address-0-address-locality,
+  .js-form-item-payment-information-billing-information-address-0-address-organization{
         display: inline-block;
         margin: 15px 15px 15px 0;
     }

@@ -20,6 +20,15 @@
 
 }
 
+.form-item-sort-by, .form-item-sort-order{
+    display: inline-block;
+    max-width: 250px;
+}
+
+#views-exposed-form-search-results-page-2{
+    text-align: right;
+}
+
 .catalog-image {
     text-align: center;
 }
@@ -88,6 +97,10 @@
 
     .js-form-type-number label{
         margin-right: 20px;
+    }
+
+    .left-column > div{
+        display: inline-block;
     }
 
     input[type=number]::-webkit-inner-spin-button,
@@ -326,6 +339,35 @@
         .image-big{
             display: inline-block;
             text-align: center;
+        }
+    }
+
+    //popup
+    .popup-dialog-class{
+
+        .popup-email{
+            margin: 10px;
+            font-weight: 700;
+        }
+
+        .after-message{
+            font-style: italic;
+            margin: 10px 0;
+        }
+
+        .answer{
+            text-align: center;
+        }
+
+        a:active,:focus{
+            text-decoration: none;
+            outline: none;
+        }
+        a.ysub{
+            color: white;
+            padding: 10px;
+            background: $darkGreen;
+            margin: 10px;
         }
     }
 }

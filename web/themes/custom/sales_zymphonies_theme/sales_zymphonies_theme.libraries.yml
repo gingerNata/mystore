@@ -16,8 +16,8 @@ global-components:
   Version: 1.x
   css:
     theme:
-      css/global.css: {}
       css/media.css: {}
+      css/global.css: {}
   js:
     js/custom.js: {}
     js/super-menu.js: {}

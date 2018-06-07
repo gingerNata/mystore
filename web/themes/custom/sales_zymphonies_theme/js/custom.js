@@ -28,23 +28,25 @@ jQuery(document).ready(function ($) {
             $('.region-primary-menu').hide();
         });
     }
-
-    var nav = $('header.main-header');
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 300) {
-            nav.addClass("fixed-nav");
-        } else {
-            nav.removeClass("fixed-nav");
-        }
-    });
-    var topMenu = $('.region-top-menu');
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 360) {
-            topMenu.addClass("fixed-top-menu");
-        } else {
-            topMenu.removeClass("fixed-top-menu");
-        }
-    });
+    
+    if ($(window).width() > 767) {
+        var nav = $('header.main-header');
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 400) {
+                nav.delay(8000).addClass("fixed-nav");
+            } else {
+                nav.delay(8000).removeClass("fixed-nav");
+            }
+        });
+        var topMenu = $('.region-top-menu');
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 400) {
+                topMenu.delay(8000).addClass("fixed-top-menu");
+            } else {
+                topMenu.delay(8000).removeClass("fixed-top-menu");
+            }
+        });
+    }
 
 });
 (function ($) {

@@ -145,9 +145,10 @@ function sales_zymphonies_theme_get_slider_content() {
     $slider_content[$i] = '<li>
       <img src="' . $path . '" alt="Slider Banner" />
       <div class="slider-caption">
-        <h2 class="slider-title">' . theme_get_setting('slide_title_' . $i, 'sales_zymphonies_theme').'</h2>
-        <div class="clearfix"><p class="slider-description">' . theme_get_setting('slide_description_' . $i, 'sales_zymphonies_theme').'</p></div>
-        <a href=' . theme_get_setting('slide_url_' . $i, 'sales_zymphonies_theme') . ' class="more-link">Read more</a>
+        <a href=' . theme_get_setting('slide_url_' . $i, 'sales_zymphonies_theme') . ' class="more-link">
+          <h2 class="slider-title">' . theme_get_setting('slide_title_' . $i, 'sales_zymphonies_theme').'</h2>
+          <div class="clearfix"><p class="slider-description">' . theme_get_setting('slide_description_' . $i, 'sales_zymphonies_theme').'</p></div>
+        </a>
       </div>
     </li>';
   }

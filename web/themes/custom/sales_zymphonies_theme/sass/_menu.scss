@@ -2,42 +2,41 @@
 
 .navbar-default {
 
-	.navbar-toggle{
-  		z-index: 999;
-		margin-right: 0;
-		border: 0;
-		border-radius: 0;
-		color: #fff;
-		background: none;
-		padding: 6px 6px;
+    .navbar-toggle {
+        z-index: 999;
+        margin-right: 0;
+        border: 0;
+        border-radius: 0;
+        color: #fff;
+        background: none;
+        padding: 6px 6px;
 
-		.icon-bar {
-		  display: block;
-		  width: 35px;
-		  height: 4px;
-		  border-radius: 1px;
-		  background-color: #333;
-		}
+        .icon-bar {
+            display: block;
+            width: 35px;
+            height: 4px;
+            border-radius: 1px;
+            background-color: #333;
+        }
 
-		&:focus, &:hover{
- 			background: none;
-		}
-	}
+        &:focus, &:hover {
+            background: none;
+        }
+    }
 }
 
-nav h2{
-  display: none;
+nav h2 {
+    display: none;
 }
 
+.menu-base-theme {
+    background: none;
 
-.menu-base-theme{
-	background: none;
+    li {
 
-	li{
-
-		margin: 0 10px;
-		border: none;
-		width: 70px;
+        margin: 0 10px;
+        border: none;
+        width: 70px;
 
         &:first-child {
 
@@ -56,38 +55,36 @@ nav h2{
             }
         }
 
-		a{
+        a {
 
-			color: $menuTextColor;
-			height: $iconHeight;
-			max-width: 65px;
-			line-height: $iconHeight;
-			padding: 0 0 0 $iconHeight;
-			font-size: 0;
+            color: $menuTextColor;
+            height: $iconHeight;
+            max-width: 65px;
+            line-height: $iconHeight;
+            padding: 0 0 0 $iconHeight;
+            font-size: 0;
 
-			&:hover {
-				line-height: $iconHeight;
-				padding: 0 0 0 $iconHeight;
+            &:hover {
+                line-height: $iconHeight;
+                padding: 0 0 0 $iconHeight;
                 color: $menuTextActiveColor;
-				//font-size: 12px;
-			}
+                //font-size: 12px;
+            }
 
-			&.highlighted,
-			&.sub-arrow{
-				color: #999;
-				font-size: 22px;
-				padding: 5px;
-				border-radius: 2px;
-				border: 1px solid #DCDCDC;
-				background: #EFEFEF;
-			}
+            &.highlighted,
+            &.sub-arrow {
+                color: #999;
+                font-size: 22px;
+                padding: 5px;
+                border-radius: 2px;
+                border: 1px solid #DCDCDC;
+                background: #EFEFEF;
+            }
 
-			span.sub-arrow{
-				line-height: 100%;
-				font-size: 2em;
-			}
-
-
+            span.sub-arrow {
+                line-height: 100%;
+                font-size: 2em;
+            }
 
             &.contacts {
 
@@ -120,93 +117,95 @@ nav h2{
                     background-size: contain;
                 }
             }
-		} 
-	}
+        }
+    }
 }
 
-.region-primary-menu{
-	display: none;
-	border-radius: 3px;
-	width: 100%;
+.region-primary-menu {
+    //display: none;
+    border-radius: 3px;
+    width: 100%;
 }
 
-#block-dodatkovemenu{
-    ul{
+@media (min-width: 1000px) {
 
-        margin: 0;
-        //padding: 10px;
+    #block-dodatkovemenu {
+        ul {
 
-        li{
-            list-style: none;
-            display: inline-block;
-            margin: 0 10px;
-            text-transform: uppercase;
-            height: auto;
-            padding: 10px;
+            margin: 0;
+            //padding: 10px;
 
-            a{
-                color: #555350;
-                font-weight: 600;
-                display: block;
-                padding: 10px 15px;
-            }
+            li {
+                list-style: none;
+                display: inline-block;
+                margin: 0 10px;
+                text-transform: uppercase;
+                height: auto;
+                padding: 10px;
 
-            &:hover{
-                background: #555350;
+                a {
+                    color: #555350;
+                    font-weight: 600;
+                    display: block;
+                    padding: 10px 15px;
+                }
 
-                a{
-                    color: white;
-					text-decoration: none;
+                &:hover {
+                    background: #555350;
+
+                    a {
+                        color: white;
+                        text-decoration: none;
+                    }
                 }
             }
         }
     }
-
 }
+
 /* Region google map */
 
-.region-google-map{
-	text-align: center;
+.region-google-map {
+    text-align: center;
 
     .menu {
         margin-top: 20px;
-        li{
+        li {
             display: inline-block;
 
-            a{
+            a {
                 color: #333;
                 margin: 15px;
             }
         }
     }
 
-    li:not(:last-child){
+    li:not(:last-child) {
         border-right: 1px solid #8f8f8f;
     }
 }
 
-
 /*Footer Menu*/
 
-.footer-menu{
-	margin: 0;
-	border: 0;
-	background: #f9f9f9;
-	color: #fff;
+.footer-menu {
+    margin: 0;
+    border: 0;
+    background: #f9f9f9;
+    color: #fff;
 }
 
-.region-footer-menu{	
+.region-footer-menu {
 
-	ul{
-		margin: 10px 0;
-		padding: 0;
-	}
-	
-	nav li{
-		display: inline-block;
-		a{
-			display: block;
-			padding: 2px 15px 2px 0;
-		}
-	}
+    ul {
+        margin: 10px 0;
+        padding: 0;
+    }
+
+    nav li {
+        display: inline-block;
+        a {
+            display: block;
+            padding: 2px 15px 2px 0;
+        }
+    }
 }
